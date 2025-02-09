@@ -1,32 +1,17 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/MwssFr_0)
-
 ![Noroff](http://images.restapi.co.za/pvt/Noroff-64.png)
 
-# Noroff
+# Noroff - Back-end Development Year 1 Exam Course Assignment (Sindre Gangeskar)
 
-## Back-end Development Year 1
+This is my exam project which entailed in creating an e-commerce application. 
+All customer-based actions are done via making API requests through Postman or equivalent. 
 
-### EP - Course Assignment Back-end
+The front-end has an admin dashboard which you can access via http://localhost:3001.
 
-Startup code for Noroff back-end development 1 - EP course (e-commerce). Ensure that your back-end and front-end code are in the respective folders
+### EP - Course Assignment
+If you want to test the application, follow the readme instructions.
 
 - [back-end folder for back-end code (back-end)](./back-end)
 - [front-end folder for front-end code (front-end)](./front-end)
-
-Instruction for the course assignment is in the LMS (Moodle) system of Noroff.
-[https://lms.noroff.no](https://lms.noroff.no)
-
-![IMPORTANT](http://images.restapi.co.za/pvt/important_icon.png)
-
-You will not be able to make any submission after the deadline of the course assignment. Make sure to make all your commit **BEFORE** the deadline
-
-Only your main branch will be graded.
-
-![HELP](http://images.restapi.co.za/pvt/help_small.png)
-
-If you are unsure of any instructions for the course assignment, contact out to your teacher on **Microsoft Teams**.
-
-**REMEMBER** Your Moodle LMS submission must have your repository link **AND** your Github username in the text file.
 
 ---
 
@@ -41,7 +26,7 @@ Type or copy the command underneath into the terminal and hit enter. It should s
 
 ## Manually downloading the project
 
-Visit the [repo](https://github.com/noroff-backend-1/ep-ca-1-sindre-gangeskar).  
+Visit the [repo](https://github.com/sindre-gangeskar/exam-project).
 
 In the top right corner of the repo, click the **Code** dropdown and select **'Download Zip'**.  
 Extracts its contents into an empty folder of your choice.
@@ -60,7 +45,7 @@ Extracts its contents into an empty folder of your choice.
 - [Regex101](https://regex101.com)
 - [StackOverflow](https://stackoverflow.com)
 - [JSONWebToken](https://www.npmjs.com/package/jsonwebtoken)
-- [ChatGPT](https://chatgpt.com/ )
+- [ChatGPT](https://chatgpt.com/)
 - [Sequelize](https://sequelize.org/)
 - [MDN](https://developer.mozilla.org/en-US/)
 - [Swagger Autogen](https://swagger-autogen.github.io/docs/)
@@ -68,4 +53,3 @@ Extracts its contents into an empty folder of your choice.
 - [Supertest](https://github.com/ladjs/supertest)
 - [Jest](https://jestjs.io/docs/getting-started)
 - [Pixabay](https://pixabay.com/photos/mountains-dawn-forest-fog-twilight-7452929/) - Background image in the login screen on front-end
-
