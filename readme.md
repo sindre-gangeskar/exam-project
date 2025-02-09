@@ -2,8 +2,20 @@
 
 # Noroff - Back-end Development Year 1 Exam Course Assignment (Sindre Gangeskar)
 
-This is my exam project which entailed in creating an e-commerce application. 
-All customer-based actions are done via making API requests through Postman or equivalent. 
+This is my exam project which revolved around simulating an e-commerce application with proper handling of carts, product quantity and restrictions to stock. 
+- All users are allowed to browse and search available products (except soft-deleted products)
+- All users can search by brand, name and category
+- Authentication is done via JWTs (JSON Web Token) with Bearer in the authorization header for making API requests. 
+- All customer-based actions are done via making API requests through Postman or equivalent. 
+- An admin user can update a product or soft-delete. 
+- A logged in user is allowed to add items to the cart and perform a checkout.
+- The project will reject a checkout if the available stock is lower than what the user inputs as their desired quantity.
+- The project calculates the discount of the user's current membership tier (Bronze 0%, Silver 15%, Gold 30%). 
+- The user's membership tier is updated based on the quantity the user has purchased,  and the updated tier's discount will be taken into account the next time the user makes a purchase. 
+- An ordernumber is generated upon a successful checkout which is a hashed 8-char long string. 
+- Only admins are able to view orders that are not their own.
+- A user can fetch the details of an ordernumber only if the order belongs to the user. 
+- Stock is recalculated and reserved whenever a user adds, updates (quantity changes) or removes an item from the cart. 
 
 The front-end has an admin dashboard which you can access via http://localhost:3001.
 
