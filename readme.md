@@ -22,7 +22,7 @@ If you want to test the application, follow the readme instructions.
 Create an empty folder for the project and open your terminal with the project's root directory as its location.
 Type or copy the command underneath into the terminal and hit enter. It should successfully clone the repository into the folder.
 
-`git clone https://github.com/noroff-backend-1/ep-ca-1-sindre-gangeskar.git .`
+`git clone https://github.com/sindre-gangeskar/exam-project.git .`
 
 ## Manually downloading the project
 
