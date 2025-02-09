@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%- title %></title>
+  <%- include('./partials/head.ejs') %>
+</head>
+
+<body class="bg-dark-subtle">
+  <%- include('./partials/navbar.ejs') %>
+  <%- include('./partials/location.ejs', {subtitle: 'Products Management', icon: 'bi-box-fill'}) %>
+  <%- include('./partials/products/search.ejs') %>
+  <%- include('./partials/products/modals/delete.ejs') %>
+  <%- include('./partials/products/modals/create.ejs') %>
+  <%- include('./partials/products/modals/update.ejs') %>
+
+  <div class="p-3 mt-2 container-fluid">
+    <%- include('./partials/tableHeader.ejs', {target: 'product'}) %>
+
+    <table class="table table-bordered table-dark table-striped container-fluid text-center">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Quantity</th>
+          <th>Unit Price</th>
+          <th>Is Deleted</th>
+          <th>Image</th>
+          <th>Brand</th>
+          <th>Category</th>
+          <th>Created At</th>
+          <th>Updated At</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(products.length === 0) { %>
+        <tr>
+          <td colspan="100%">No products found</td>
+        </tr>
+        <%  } else {  %>
+        <% products.forEach(product=> { %>
+        <tr class="align-content-center align-middle" id="product"
+            data-product-id=<%- product.id %>
+            data-product-name="<%= product.name %>"
+            data-product-description="<%= product.description%>"
+            data-brand="<%= product.brand %>" data-category="<%= product.category %>"
+            data-product-quantity="<%= product.quantity%>"
+            data-product-price-per-unit="<%= product.unitprice%>"
+            data-product-deleted="<%= product.isdeleted %>"
+            data-product-current-brand-id="<%= product.BrandId %>"
+            data-product-current-category-id="<%= product.CategoryId%>"
+            data-product-image-url="<%= product.imgurl %>">
+
+          <td class="col-1"><%- product.id %></td>
+          <td class="col-1"><%- product.name %></td>
+          <td class="col-1"><%- product.description%></td>
+          <td class="col-1"><%- product.quantity%></td>
+          <td class="col-1"><%- product.unitprice%></td>
+          <td class="col-1">
+            <% if(!product.isdeleted) { %>
+            <div class="form-switch d-flex align-content-center mx-auto justify-content-center">
+              <input class="form-check-input" type="checkbox" role="switch" name="<%= product.id %>" disabled>
+            </div>
+            <% } else{ %>
+            <div class="form-check form-switch d-flex align-content-center mx-auto justify-content-center">
+              <input class="form-check-input" type="checkbox" role="switch" name="<%= product.id %>" id=<%="deleted-status-" + product.id %> disabled checked>
+            </div>
+            <% } %>
+          </td>
+          <td class="col-1">
+            <img src="<%-product.imgurl%>" alt="preview-thumbnail" onerror=this.src="/images/NoImageAvailable.png" class="object-fit-contain" height="80px" width="100%">
+          </td>
+          <td class="col-1"><%- product.brand%></td>
+          <td class="col-1"><%- product.category%></td>
+          <td class="col-1 created-at"><%- product.date_added || product.createdAt%></td>
+          <td class="col-1 updated-at"><%- product.updatedAt%></td>
+          <td class="col-2">
+            <button class="btn btn-warning" id="edit-btn" data-bs-toggle="modal" data-bs-target="#updateModal"><i class="bi bi-pencil-square"></i></button>
+            <% if(!product.isdeleted) { %>
+            <button class="btn btn-danger" id="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="bi bi-trash-fill"></i></button>
+            <% } %>
+          </td>
+        </tr>
+        <% }) %>
+        <% }%>
+      </tbody>
+    </table>
+  </div>
+
+
+  <%- include('./partials/alerts/clientAlertMessages.ejs') %>
+  <%- include('./partials/bootstrapScripts.ejs') %>
+  <script src="/javascripts/products.js" type="module"></script>
+  <script src="/javascripts/alerts.js"></script>
+</body>
+
+</html>

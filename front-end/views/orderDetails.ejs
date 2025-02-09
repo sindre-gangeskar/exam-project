@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%- title %></title>
+  <%- include('./partials/head.ejs') %>
+</head>
+
+<body class="bg-dark-subtle">
+  <%- include('./partials/navbar.ejs') %>
+  <%- include('./partials/location.ejs', {subtitle: 'Order Details', icon: 'bi-bag-check-fill'}) %>
+
+  <div class="p-3 mt-2 container-fluid">
+    <%- include('./partials/tableHeader.ejs', {target: null}) %>
+    <table class="table table-bordered table-dark table-striped text-center">
+      <thead>
+        <tr>
+          <th class="col-1">Order Item ID</th>
+          <th class="col-1">Order Status</th>
+          <th class="col-1">Product</th>
+          <th class="col-1">Product ID</th>
+          <th class="col-1">Unit Price</th>
+          <th class="col-1">Membership</th>
+          <th class="col-1">Discount</th>
+          <th class="col-1">Quantity</th>
+          <th class="col-1">Total Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(order.length === 0) {%>
+        <td colspan="100%">No order items found</td>
+        <% } else { %>
+        <% order.forEach(item => { %>
+        <tr class="text-center align-content-center w-100 align-baseline">
+          <td class="col-1"><%- item.id %></td>
+          <td class="col-1"><span class="badge <%= item.StatusId == 1 ? 'bg-danger' : item.StatusId == 2 ? 'bg-primary' : 'bg-success' %>"><%- item.status %></span></td>
+          <td class="col-1"><%- item.product %></td>
+          <td class="col-1"><%- item.ProductId %></td>
+          <td class="col-1"><%- item.unitprice %></td>
+          <td class="col-1"><span class="badge <%= item.membership === 'Bronze' ? 'bg-danger' : item.membership === 'Silver' ? 'bg-secondary' : 'bg-warning' %>"><%- item.membership %><span /></td>
+          <td class="col-1"><%- item.discount %>%</td>
+          <td class="col-1"><%- item.quantity %></td>
+          <td class="col-1"><%- item.totalprice %></td>
+        </tr>
+        <% })%>
+        <tr>
+          <td colspan="100%" class="text-center">
+            <span>Total Price: <%= order.reduce((total, item) => total + (item.quantity * item.unitprice), 0)  %><span />
+          </td>
+        </tr>
+        <% }%>
+      </tbody>
+    </table>
+  </div>
+
+  <%- include('./partials/bootstrapScripts.ejs') %>
+  <script src="/javascripts/orderDetails.js" type="module"></script>
+</body>
+
+</html>

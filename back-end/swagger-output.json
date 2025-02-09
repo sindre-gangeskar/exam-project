@@ -1,0 +1,5696 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Exam Backend API",
+    "description": "API documentation for Sindre Gangeskar's Exam Project",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "securityDefinitions": {
+    "adminAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "Include **Bearer** prefix in the value field with token - e.g **Bearer abc123**"
+    },
+    "userAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "Include **Bearer** prefix in the value field with token - e.g **Bearer abc123**"
+    }
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Index"
+        ],
+        "description": "Home for the exam project of Sindre Gangeskar",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned if the API successfully reaches the index endpoint",
+            "success": {
+              "statusCode": 200,
+              "result": "Welcome to the exam project for Sindre Gangeskar"
+            }
+          }
+        }
+      }
+    },
+    "/init": {
+      "post": {
+        "tags": [
+          "Database Initialization"
+        ],
+        "description": "Initialize the database with initial data fetched from the CA API",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the database is already populated",
+            "schema": {
+              "$ref": "#/definitions/initDBPopulated"
+            }
+          },
+          "201": {
+            "description": "This response is returned when the API successfully populates the database",
+            "schema": {
+              "$ref": "#/definitions/initDBSuccess"
+            }
+          },
+          "500": {
+            "description": "This response is returned when **internal server error** occurrs while the API is trying to populate initial data to the database",
+            "schema": {
+              "$ref": "#/definitions/initDBInternalError"
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Authorization"
+        ],
+        "description": "A **guest** can sign up for the service and log in with the **Username** or **Email** the user provides during registration",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "All required properties for the creation of a user",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "johndoe"
+                },
+                "firstname": {
+                  "type": "string",
+                  "example": "John"
+                },
+                "lastname": {
+                  "type": "string",
+                  "example": "Doe"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "johndoe@email.com"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "1234567890"
+                },
+                "address": {
+                  "type": "string",
+                  "example": "John Doe Homestreet 15A"
+                }
+              },
+              "required": [
+                "username",
+                "firstname",
+                "lastname",
+                "email",
+                "phone",
+                "address"
+              ]
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successully creates a user",
+            "schema": {
+              "$ref": "#/definitions/authPostSignupSuccess"
+            }
+          },
+          "400": {
+            "description": "This response is returned when the **user** provides incorrect or invalid values in the body",
+            "schema": {
+              "$ref": "#/definitions/authPostSignupUserError"
+            }
+          },
+          "409": {
+            "description": "This response is returned when the user provides an **email** or a **username** that an existing user already uses",
+            "schema": {
+              "$ref": "#/definitions/authPostSignupConflict"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to create a user",
+            "schema": {
+              "$ref": "#/definitions/authPostSignupInternalError"
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Authorization"
+        ],
+        "description": "A guest can log in to a **registered** account with **Username** or **Email**",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User credentials for logging in. The API accepts either the **username** or **email**, and allows the user to choose which to use as it doesn't require both to be in the body.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "johndoe"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "secret"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "johndoe@email.com"
+                }
+              },
+              "required": [
+                "username",
+                "password"
+              ]
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the user successully logs in",
+            "schema": {
+              "$ref": "#/definitions/authPostLoginSuccess"
+            }
+          },
+          "400": {
+            "description": "This response is returned when the user has provided incorrect or invalid values or properties in the body",
+            "schema": {
+              "$ref": "#/definitions/authPostLoginUserError"
+            }
+          },
+          "404": {
+            "description": "This response is returned when the API fails to find user with provided **username** or **email**",
+            "schema": {
+              "$ref": "#/definitions/authPostLoginNotFound"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** while the API is trying to find user data",
+            "schema": {
+              "$ref": "#/definitions/authPostLoginInternalError"
+            }
+          }
+        }
+      }
+    },
+    "/auth/verify-role": {
+      "get": {
+        "tags": [
+          "Authorization"
+        ],
+        "description": "A logged in **user** can fetch the role it has - very useful when you want to make sure the user has an admin role for example.",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully return the role the user is assigned",
+            "schema": {
+              "$ref": "#/definitions/authGetRoleCheckSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/unauthorized"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** while the API is trying to read the token and its data",
+            "schema": {
+              "$ref": "#/definitions/authGetRoleInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "userAuth": []
+          },
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/products/": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "description": "A **guest** and any **users** can retrieve all available products",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully retrieves all available products. If no products are found, an **empty array** will be returned",
+            "schema": {
+              "$ref": "#/definitions/productsGetSuccess"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while is trying to get all available products",
+            "schema": {
+              "$ref": "#/definitions/productsGetInternalError"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "description": "An **admin** can create a new product",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "All **required** properties for the creation of a product",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "A product name"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "A product description"
+                },
+                "unitprice": {
+                  "type": "number",
+                  "example": 399
+                },
+                "quantity": {
+                  "type": "number",
+                  "example": 10
+                },
+                "CategoryId": {
+                  "type": "number",
+                  "example": 2
+                },
+                "BrandId": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully creates a new products",
+            "schema": {
+              "$ref": "#/definitions/productsPostSuccess"
+            }
+          },
+          "400": {
+            "description": "This response is returned when the **admin** user provides incorrect or invalid values or properties in the body. This response can also occur when there's a **missing property**",
+            "schema": {
+              "$ref": "#/definitions/productsPostUserError"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "404": {
+            "description": "This response is returned when the **admin** user has provided a **category id** or a **brand id** that the API can't find",
+            "schema": {
+              "$ref": "#/definitions/productsPostNotFound"
+            }
+          },
+          "409": {
+            "description": "This response is returned when the product name is identical to a product that already exists",
+            "schema": {
+              "$ref": "#/definitions/productsPostConflict"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to create a product",
+            "schema": {
+              "$ref": "#/definitions/productsPostInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/products/all": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "description": "An **admin** can retrieve all products, including the **deleted** ones",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully retrieves all products which also includes the **deleted** ones. If no products are found, an **empty array** will be returned",
+            "schema": {
+              "$ref": "#/definitions/productsGetAllSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to get products",
+            "schema": {
+              "$ref": "#/definitions/productsGetAllInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/products/search": {
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "description": "A **guest** and any **users** can search for product(s) that contains a **brand**, a **category** or a **partial or full product name**.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The **search** property in body is required, and its value must be a non-empty string",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "search": {
+                  "type": "string",
+                  "example": "exampleBrand"
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully retrieves all available products that matches the search keyword. If no products are found, an **empty array** will be returned",
+            "schema": {
+              "$ref": "#/definitions/productsSearchSuccess"
+            }
+          },
+          "400": {
+            "description": "This response is returned when the body is missing the **search** property or if it's an **invalid** value",
+            "schema": {
+              "$ref": "#/definitions/productsSearchUserError"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while is trying to get all available products with the provided keyword",
+            "schema": {
+              "$ref": "#/definitions/productsSearchInternalError"
+            }
+          }
+        }
+      }
+    },
+    "/products/deleted": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "description": "An **admin** can retrieve all **deleted** products",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully retrieves only the **deleted** products. If no deleted products are found, an **empty array** will be returned",
+            "schema": {
+              "$ref": "#/definitions/productsGetDeletedSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to get all **deleted** products",
+            "schema": {
+              "$ref": "#/definitions/productsGetDeletedInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/products/{id}": {
+      "put": {
+        "tags": [
+          "Products"
+        ],
+        "description": "An **admin** can update any product",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The product id"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The available properties an **admin** can use for updating a product. At least **one** property must be present in the body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "A product name"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Product description"
+                },
+                "unitprice": {
+                  "type": "number",
+                  "example": 499
+                },
+                "quantity": {
+                  "type": "number",
+                  "example": 10
+                },
+                "imgurl": {
+                  "type": "string",
+                  "example": "https://some.url.com/exampleImage.png"
+                },
+                "BrandId": {
+                  "type": "number",
+                  "example": 1
+                },
+                "CategoryId": {
+                  "type": "number",
+                  "example": 2
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully updates a product",
+            "schema": {
+              "$ref": "#/definitions/productsUpdateSuccess"
+            }
+          },
+          "400": {
+            "description": "This response is returned when the **admin** user provides incorrect or invalid values or properties in the body. ",
+            "schema": {
+              "$ref": "#/definitions/productsUpdateUserError"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "404": {
+            "description": "This response is returned when the API can't find a product with the provided id, or is unable to find the brand or the category with their id if provided",
+            "schema": {
+              "$ref": "#/definitions/productsUpdateNotFound"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to update a product",
+            "schema": {
+              "$ref": "#/definitions/productsUpdateInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Products"
+        ],
+        "description": "An **admin** can delete any product",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The product id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully deletes a product",
+            "schema": {
+              "$ref": "#/definitions/productsDeleteSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "404": {
+            "description": "This response is returned when the API can't find a product with the provided id for deletion",
+            "schema": {
+              "$ref": "#/definitions/productsDeleteNotFound"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to delete a product",
+            "schema": {
+              "$ref": "#/definitions/productsDeleteInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/cart/": {
+      "get": {
+        "tags": [
+          "Cart"
+        ],
+        "description": "A **logged in user** can retrieve all items that have been added to the user\\'s cart. If the cart is empty, an **empty array** will be returned",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully retrieves all items placed in cart for current user, if no cart items are found an **empty array** is returned",
+            "schema": {
+              "$ref": "#/definitions/cartGetSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/unauthorized"
+            }
+          },
+          "500": {
+            "description": "This response is returned when **an internal server** has occurred while the API is trying to get all items in cart for the current user",
+            "schema": {
+              "$ref": "#/definitions/cartGetInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "userAuth": []
+          },
+          {
+            "adminAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "description": "A **logged in user** can add a product to the cart",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The **product id** must be provided in order to add a product to cart",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ProductId": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully adds a product to the cart",
+            "schema": {
+              "$ref": "#/definitions/cartPostSuccess"
+            }
+          },
+          "400": {
+            "description": "This response is returned when the **user** provides incorrect or invalid values or properties in the body",
+            "schema": {
+              "$ref": "#/definitions/cartPostUserError"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/unauthorized"
+            }
+          },
+          "404": {
+            "description": "This response is returned when the API is unable to find a product with the provided id the user wishes to add to cart",
+            "schema": {
+              "$ref": "#/definitions/cartPostNotFound"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to add a product to cart",
+            "schema": {
+              "$ref": "#/definitions/cartPostInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "userAuth": []
+          },
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/cart/checkout/now": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "description": "A **logged in user** can proceed to checkout and an **order** will be created with a unique **order number**",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API succeeds in checking out all cart products in the cart for the logged in user",
+            "schema": {
+              "$ref": "#/definitions/cartCheckoutSuccess"
+            }
+          },
+          "400": {
+            "description": "This response is returned when the API fails to find items in the cart for the logged in user",
+            "schema": {
+              "$ref": "#/definitions/cartCheckoutUserError"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/unauthorized"
+            }
+          },
+          "500": {
+            "description": "This response is returned when **an internal error** occurrs while the API is trying to check out all of the items placed in the cart for the logged in user",
+            "schema": {
+              "$ref": "#/definitions/cartCheckoutInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          },
+          {
+            "userAuth": []
+          }
+        ]
+      }
+    },
+    "/cart/{id}": {
+      "delete": {
+        "tags": [
+          "Cart"
+        ],
+        "description": "A **logged in user** can remove an item from its cart",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The cart item id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully deleted a cart item",
+            "schema": {
+              "$ref": "#/definitions/cartDeleteSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/unauthorized"
+            }
+          },
+          "404": {
+            "description": "This response is returned when the API is unable to find a cart item with the id provided by the user",
+            "schema": {
+              "$ref": "#/definitions/cartDeleteNotFound"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **an internal error** occurrs while the API is trying remove an item from cart",
+            "schema": {
+              "$ref": "#/definitions/cartDeleteInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          },
+          {
+            "userAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Cart"
+        ],
+        "description": "A **logged in user** can update the item\\'s quantity by using **Add**, **Remove** or **TotalQuantity** in the body.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The cart item id"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The properties available. Only **one** property is allowed at a time",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "totalQuantity": {
+                  "type": "number",
+                  "example": 1
+                },
+                "add": {
+                  "type": "number",
+                  "example": 10
+                },
+                "remove": {
+                  "type": "number",
+                  "example": 5
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully updates a cart item",
+            "schema": {
+              "$ref": "#/definitions/cartUpdateSuccess"
+            }
+          },
+          "400": {
+            "description": "This response is returned when the **user** has provided incorrect or invalid values or properties in the body",
+            "schema": {
+              "$ref": "#/definitions/cartUpdateUserError"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/unauthorized"
+            }
+          },
+          "404": {
+            "description": "This response is returned when the API is unable to find a cart item by the id the **user** provided",
+            "schema": {
+              "$ref": "#/definitions/cartUpdateNotFound"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to update a cart item",
+            "schema": {
+              "$ref": "#/definitions/cartUpdateInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          },
+          {
+            "userAuth": []
+          }
+        ]
+      }
+    },
+    "/brands/": {
+      "get": {
+        "tags": [
+          "Brands"
+        ],
+        "description": "Any user can view all available brands",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully retrieves all brands. If no brands are found, an **empty array** will be returned",
+            "schema": {
+              "$ref": "#/definitions/brandsGetSuccess"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to retrieve all available brands",
+            "schema": {
+              "$ref": "#/definitions/brandsGetInternalError"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Brands"
+        ],
+        "description": "An **admin** can create a new brand for products to use",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The name property is **required** in order to create a brand",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Example Brand"
+                }
+              },
+              "required": [
+                "name"
+              ]
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully creates a new brand",
+            "schema": {
+              "$ref": "#/definitions/brandsPostSuccess"
+            }
+          },
+          "400": {
+            "description": "This response is returned when the **admin** user provides incorrect or invalid values or properties in the body",
+            "schema": {
+              "$ref": "#/definitions/brandsPostUserError"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "409": {
+            "description": "This response is returned when the API tries to create a brand, but another brand with the provided brand name already exists",
+            "schema": {
+              "$ref": "#/definitions/brandsPostConflict"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to create a new brand",
+            "schema": {
+              "$ref": "#/definitions/brandsPostInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/brands/{id}": {
+      "delete": {
+        "tags": [
+          "Brands"
+        ],
+        "description": "An **admin** can delete a brand",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The brand id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully deletes a brand",
+            "schema": {
+              "$ref": "#/definitions/brandsDeleteSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "404": {
+            "description": "This response is returned when the API fails to find a brand with the provided id ",
+            "schema": {
+              "$ref": "#/definitions/brandsDeleteNotFound"
+            }
+          },
+          "409": {
+            "description": "This response is returned when the API fails to delete the brand because a product or several are using the brand **admin** wants to delete",
+            "schema": {
+              "$ref": "#/definitions/brandsDeleteConflict"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API attempts to delete a brand",
+            "schema": {
+              "$ref": "#/definitions/brandsDeleteInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Brands"
+        ],
+        "description": "An **admin** can update a brand\\'s name",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The brand id"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The **name** property is required in order to update a brand's name",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Another brand name"
+                }
+              },
+              "required": [
+                "name"
+              ]
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully updates a brand",
+            "schema": {
+              "$ref": "#/definitions/brandsUpdateSuccess"
+            }
+          },
+          "400": {
+            "description": "This response is returned when **admin** provides an invalid value",
+            "schema": {
+              "$ref": "#/definitions/brandsUpdateUserError"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "409": {
+            "description": "This response is returned when there's a conflict while trying to update the brand's name to something another brand is already using",
+            "schema": {
+              "$ref": "#/definitions/brandsUpdateConflict"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an internal server occurrs while the API is trying to update brand",
+            "schema": {
+              "$ref": "#/definitions/brandsUpdateInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/memberships/": {
+      "get": {
+        "tags": [
+          "Memberships"
+        ],
+        "description": "An **admin** can retrieve all available memberships",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully retrieves all memberships. If no memberships are found, an **empty array** will be returned",
+            "schema": {
+              "$ref": "#/definitions/membershipsGetSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to retrieve all memberships",
+            "schema": {
+              "$ref": "#/definitions/membershipsGetInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/categories/": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "description": "Anyone can view the categories that currently exist",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully retrieves all categories. If no categories are found, an **empty array** will be returned",
+            "schema": {
+              "$ref": "#/definitions/categoriesGetSuccess"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an internal server error occurrs while the API is trying to get all products",
+            "schema": {
+              "$ref": "#/definitions/categoriesGetInternalError"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Categories"
+        ],
+        "description": "An **admin** can create new categories for products to use",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The **name** property is required in order to create a category",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "category name"
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully creates a new category",
+            "schema": {
+              "$ref": "#/definitions/categoriesPostSuccess"
+            }
+          },
+          "400": {
+            "description": "This response is returned when the **admin** user provides incorrect or invalid values or properties in the body",
+            "schema": {
+              "$ref": "#/definitions/categoriesPostUserError"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "409": {
+            "description": "This response is returned when **admin** provides a category name that an existing category is already using",
+            "schema": {
+              "$ref": "#/definitions/categoriesPostConflict"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to create a new category",
+            "schema": {
+              "$ref": "#/definitions/categoriesPostInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/categories/{id}": {
+      "put": {
+        "tags": [
+          "Categories"
+        ],
+        "description": "An **admin** can update a category\\'s name",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The category id"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The **name** property is required in order to update a category's name",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "A different category name"
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully updates a category's name",
+            "schema": {
+              "$ref": "#/definitions/categoriesUpdateSuccess"
+            }
+          },
+          "400": {
+            "description": "This response is returned when the **admin** user provides incorrect or invalid values or properties in the body",
+            "schema": {
+              "$ref": "#/definitions/categoriesUpdateUserError"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "404": {
+            "description": "This response is returned when the API can't find a category with the provided id",
+            "schema": {
+              "$ref": "#/definitions/categoriesUpdateNotFound"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** has occurred while the API is trying to update a category",
+            "schema": {
+              "$ref": "#/definitions/categoriesUpdateInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Categories"
+        ],
+        "description": "An **admin** can delete a category",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The category id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully deletes a category",
+            "schema": {
+              "$ref": "#/definitions/categoriesDeleteSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "404": {
+            "description": "This response is returned when the API can't find a category with the provided id",
+            "schema": {
+              "$ref": "#/definitions/categoriesDeleteNotFound"
+            }
+          },
+          "409": {
+            "description": "This response is returned when the API fails to delete because a product or several are using the category **admin** wants to delete",
+            "schema": {
+              "$ref": "#/definitions/categoriesDeleteConflict"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to delete a category",
+            "schema": {
+              "$ref": "#/definitions/categoriesDeleteInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/orders/all": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "An **admin** can retrieve all orders for all customers",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully retrieves all orders. If no orders are found, an **empty array** will be returned",
+            "schema": {
+              "$ref": "#/definitions/ordersGetSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an internal server occurrs while the API is trying to get all orders",
+            "schema": {
+              "$ref": "#/definitions/ordersGetInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/orders/": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "A logged in **user** can retrieve orders that belong to the **user**.",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully retrieves all orders for the relevant **user**. If no orders are found, an **empty array** will be returned",
+            "schema": {
+              "$ref": "#/definitions/ordersGetSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/unauthorized"
+            }
+          },
+          "500": {
+            "description": "This response is returned when An internal server has occurrs while the API is trying to get all orders for the current **User**",
+            "schema": {
+              "$ref": "#/definitions/ordersGetUserInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "userAuth": []
+          }
+        ]
+      }
+    },
+    "/orders/{ordernumber}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "A **user** can view order details by providing the order number which includes products, quantity, price and total price for the order. An **admin** user can view any order\\'s details without direct ownership",
+        "parameters": [
+          {
+            "name": "ordernumber",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The ordernumber"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully retrieves order details with the provided **ordernumber**",
+            "schema": {
+              "$ref": "#/definitions/ordersGetByOrderNumberSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/unauthorized"
+            }
+          },
+          "404": {
+            "description": "This response is returned when the API fails to find order details with the provided **ordernumber**",
+            "schema": {
+              "$ref": "#/definitions/ordersGetByOrderNumberNotFound"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an internal server occurrs while the API is trying to get order details with the provided **ordernumber**",
+            "schema": {
+              "$ref": "#/definitions/ordersGetByOrderNumberInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/orders/{id}": {
+      "put": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "An **admin** can update the status of an order.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The order id"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The **StatusId** property is required in order to update an order's status",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "StatusId": {
+                  "type": "number",
+                  "example": 2
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully updates the order status",
+            "schema": {
+              "$ref": "#/definitions/ordersOrderUpdateSuccess"
+            }
+          },
+          "400": {
+            "description": "This response is returned when **admin** fails to include StatusId in the body or the provided value isn't a **number**",
+            "schema": {
+              "$ref": "#/definitions/ordersOrderUpdateUserError"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "404": {
+            "description": "This response is returned when the API fails to find an order with the provided order id, or the status id",
+            "schema": {
+              "$ref": "#/definitions/ordersOrderUpdateNotFound"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an internal server has occurrs while the API is trying to get all orders",
+            "schema": {
+              "$ref": "#/definitions/ordersOrderUpdateInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/users/": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "An **admin** can retrieve all existing users",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully finds all users regsitered. If no users are found, an **empty array** will be returned",
+            "schema": {
+              "$ref": "#/definitions/usersGetSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to get all users",
+            "schema": {
+              "$ref": "#/definitions/usersGetInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/users/user/details": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "A logged in **user** can retrieve its own details",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully finds user details for the logged in user",
+            "schema": {
+              "$ref": "#/definitions/userGetByIdSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/unauthorized"
+            }
+          },
+          "404": {
+            "description": "This response is returned when the API fails to find user details for the logged in user",
+            "schema": {
+              "$ref": "#/definitions/userGetByIdNotFound"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to find user details for the logged in user",
+            "schema": {
+              "$ref": "#/definitions/userGetByIdInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "userAuth": [],
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "description": "An **admin** can retrieve a user\\'s details by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The user id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully finds the user with the provided id",
+            "schema": {
+              "$ref": "#/definitions/userGetByIdSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "404": {
+            "description": "This response is returned when the API fails to find a user with the provided id",
+            "schema": {
+              "$ref": "#/definitions/userGetByIdNotFound"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to find a user with the provided id",
+            "schema": {
+              "$ref": "#/definitions/userGetByIdInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "description": "An **admin** can update a user\\'s data",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The user id"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The available properties for updating a user's details",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "RoleId": {
+                  "type": "number",
+                  "example": 1
+                },
+                "email": {
+                  "type": "string",
+                  "example": "new@email.com"
+                },
+                "firstname": {
+                  "type": "string",
+                  "example": "John"
+                },
+                "lastname": {
+                  "type": "string",
+                  "example": "Smith"
+                },
+                "address": {
+                  "type": "string",
+                  "example": "New address"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "123456789"
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully updates the user data",
+            "schema": {
+              "$ref": "#/definitions/userUpdateByIdSuccess"
+            }
+          },
+          "400": {
+            "description": "This response is returned when the **admin** user provides incorrect or invalid values or properties in the body",
+            "schema": {
+              "$ref": "#/definitions/userUpdateByIdUserError"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "404": {
+            "description": "This response is returned when the API fails to find a user with the provided user id, or role id",
+            "schema": {
+              "$ref": "#/definitions/userUpdateByIdNotFound"
+            }
+          },
+          "409": {
+            "description": "This response is returned when the user provides an **email** that is already in use by another user",
+            "schema": {
+              "$ref": "#/definitions/userUpdateByIdConflict"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to find a user with the provided id",
+            "schema": {
+              "$ref": "#/definitions/userUpdateByIdInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/roles/": {
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "description": "An **admin** can retrieve all roles available",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully retrieves all available roles. If no roles are found, an **empty array** will be returned",
+            "schema": {
+              "$ref": "#/definitions/rolesGetSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "500": {
+            "description": "This response is returned when **an internal server error** occurrs while the API is trying to retrieve all roles",
+            "schema": {
+              "$ref": "#/definitions/rolesGetInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    },
+    "/statuses/": {
+      "get": {
+        "tags": [
+          "Statuses"
+        ],
+        "description": "An **admin** can retrieve all existing statuses",
+        "responses": {
+          "200": {
+            "description": "This response is returned when the API successfully finds all statuses. If no statuses are found, an **empty array** is returned",
+            "schema": {
+              "$ref": "#/definitions/statusesGetSuccess"
+            }
+          },
+          "401": {
+            "description": "This response is returned when the user lacks **admin** privileges or isn't logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**",
+            "schema": {
+              "$ref": "#/definitions/adminUnauthorized"
+            }
+          },
+          "500": {
+            "description": "This response is returned when an **internal server error** occurrs while the API is trying to get all statuses",
+            "schema": {
+              "$ref": "#/definitions/statusesGetInternalError"
+            }
+          }
+        },
+        "security": [
+          {
+            "adminAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "initDBSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 201
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully populated database"
+            }
+          }
+        }
+      }
+    },
+    "initDBPopulated": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Database is already populated with initial data"
+            }
+          }
+        }
+      }
+    },
+    "initDBInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to populate database"
+            }
+          }
+        }
+      }
+    },
+    "unauthorized": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 401
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Login required",
+                "Invalid token, please log in again",
+                "Session has expired, please log in again"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "InvalidJWTError",
+                "InvalidCredentialsError",
+                "UnauthorizedError",
+                "TokenExpiredError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "adminUnauthorized": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 401
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Login required",
+                "Admin privileges required",
+                "Invalid token, please log in again",
+                "Session has expired, please log in again"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "InvalidJWTError",
+                "InvalidCredentialsError",
+                "UnauthorizedError",
+                "TokenExpiredError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "authGetRoleCheckSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Role check successful"
+            },
+            "role": {
+              "type": "array",
+              "example": [
+                "Admin",
+                "User"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "authGetRoleInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "An internal server error has occurred while trying to get token",
+                "An internal server error has occurred while trying to read token payload"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "JWTGetError",
+                "JWTReadError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "usersGetSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Successfully found users",
+                "No users found"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "users": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": "user"
+                  },
+                  "firstname": {
+                    "type": "string",
+                    "example": "John"
+                  },
+                  "lastname": {
+                    "type": "string",
+                    "example": "Doe"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "johndoe@email.com"
+                  },
+                  "address": {
+                    "type": "string",
+                    "example": "Example Address"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": "123456789"
+                  },
+                  "totalPurchases": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "example": "2024-11-05T13:53:25.000Z"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "example": "2024-11-05T13:53:25.000Z"
+                  },
+                  "RoleId": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "role": {
+                    "type": "string",
+                    "example": "User"
+                  },
+                  "MembershipId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "membership": {
+                    "type": "string",
+                    "example": "Bronze"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "usersGetInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "message": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to get all users"
+            }
+          }
+        }
+      }
+    },
+    "authPostSignupSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully created user"
+            }
+          }
+        }
+      }
+    },
+    "authPostSignupConflict": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 409
+            },
+            "result": {
+              "type": "string",
+              "example": "A user with provided email or username already exists"
+            },
+            "error": {
+              "type": "string",
+              "example": "DuplicateRecordError"
+            }
+          }
+        }
+      }
+    },
+    "authPostSignupUserError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 400
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Required properties are missing",
+                "Please remove invalid properties",
+                "username must be a non-empty string",
+                "firstname must be a non-empty string",
+                "lastname must be a non-empty string",
+                "address must be a non-empty string",
+                "phone must be a non-empty string with numbers only (spaces allowed)",
+                "email must be a non-empty string which follows the correct email format, e.g example@email.com"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyError",
+                "MissingPropertyError",
+                "InvalidStringError",
+                "InvalidEmailError",
+                "InvalidPhoneError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "missingInBody": {
+          "type": "array",
+          "example": [
+            "phone",
+            "lastname"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "invalidProperties": {
+          "type": "array",
+          "example": [
+            "InvalidPropertyExample1",
+            "InvalidPropertyExample2"
+          ],
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "authPostSignupInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "message": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to create user"
+            },
+            "error": {
+              "type": "string",
+              "example": "UserPostInternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "authPostLoginSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully logged in"
+            },
+            "token": {
+              "type": "string",
+              "example": "<jwt>"
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "name": {
+                  "type": "string",
+                  "example": "john smith"
+                },
+                "role": {
+                  "type": "string",
+                  "example": "user"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "johnsmith@email.com"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "authPostLoginUserError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 401
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Required properties are missing",
+                "username or email is required and must be a non-empty string",
+                "password is required and must be a non-empty string",
+                "Invalid credentials, please try again"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "InvalidCredentialsError",
+                "MissingCredentialsError",
+                "InvalidStringError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "missingInBody": {
+              "type": "array",
+              "example": [
+                "username",
+                "password",
+                "email"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "invalidProperties": {
+              "type": "array",
+              "example": [
+                "ExampleInvalidProperty1",
+                "ExampleInvalidProperty2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "authPostLoginNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "string",
+              "example": "No user with provided email or username exists"
+            },
+            "error": {
+              "type": "string",
+              "example": "UserNotFoundError"
+            }
+          }
+        }
+      }
+    },
+    "authPostLoginInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "message": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to find user data"
+            }
+          }
+        }
+      }
+    },
+    "userGetByIdSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully found user"
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "username": {
+                  "type": "string",
+                  "example": "johnSmith"
+                },
+                "firstname": {
+                  "type": "string",
+                  "example": "John"
+                },
+                "lastname": {
+                  "type": "string",
+                  "example": "Smith"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "johnsmith@email.com"
+                },
+                "address": {
+                  "type": "string",
+                  "example": "Example Address"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "123456789"
+                },
+                "totalPurchases": {
+                  "type": "number",
+                  "example": 3
+                },
+                "createdAt": {
+                  "type": "string",
+                  "example": "2024-12-05T13:20:59.000Z"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "example": "2024-12-05T13:20:59.000Z"
+                },
+                "RoleId": {
+                  "type": "number",
+                  "example": 2
+                },
+                "role": {
+                  "type": "string",
+                  "example": "User"
+                },
+                "MembershipId": {
+                  "type": "number",
+                  "example": 1
+                },
+                "membership": {
+                  "type": "string",
+                  "example": "Bronze"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "userGetByIdNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "string",
+              "example": "No user with provided id exists"
+            },
+            "error": {
+              "type": "string",
+              "example": "UserNotFoundError"
+            }
+          }
+        }
+      }
+    },
+    "userGetByIdInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to get user with provided id"
+            }
+          }
+        }
+      }
+    },
+    "userUpdateByIdSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully updated user"
+            }
+          }
+        }
+      }
+    },
+    "userUpdateByIdUserError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 400
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Please remove invalid properties",
+                "At least one property must be present",
+                "firstname must be a non-empty string",
+                "lastname must be a non-empty string",
+                "address must be a non-empty string",
+                "phone must be a non-empty string with numbers only (spaces allowed)",
+                "email must be a non-empty string which follows the correct email format, e.g example@email.com",
+                "RoleId must be a number"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyError",
+                "BodyEmptyUserError",
+                "InvalidStringError",
+                "InvalidEmailError",
+                "InvalidPhoneError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "validProperties": {
+              "type": "array",
+              "example": [
+                "RoleId",
+                "firstname",
+                "lastname",
+                "email",
+                "phone"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "invalidProperties": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyExample1, InvalidPropertyExample2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "userUpdateByIdConflict": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 409
+            },
+            "result": {
+              "type": "string",
+              "example": "Cannot update user - The email provided is already in use by another user"
+            },
+            "error": {
+              "type": "string",
+              "example": "DuplicateRecordError"
+            }
+          }
+        }
+      }
+    },
+    "userUpdateByIdNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "No user with provided id exists",
+                "No role with provided id exists"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "UserNotFoundError",
+                "RoleNotFoundError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "userUpdateByIdInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "message": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to update user data"
+            }
+          }
+        }
+      }
+    },
+    "brandsGetSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Successfully found brands",
+                "No brands found"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "brands": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Apple"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "brandsGetInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "message": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to get all brands"
+            }
+          }
+        }
+      }
+    },
+    "brandsDeleteSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully deleted brand"
+            }
+          }
+        }
+      }
+    },
+    "brandsDeleteNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "string",
+              "example": "Cannot find brand with provided id"
+            },
+            "error": {
+              "type": "string",
+              "example": "BrandNotFoundError"
+            }
+          }
+        }
+      }
+    },
+    "brandsDeleteConflict": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 409
+            },
+            "result": {
+              "type": "string",
+              "example": "Cannot delete brand - A product is using this brand"
+            },
+            "error": {
+              "type": "string",
+              "example": "BrandDeleteError"
+            }
+          }
+        }
+      }
+    },
+    "brandsDeleteInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "message": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to delete brand"
+            }
+          }
+        }
+      }
+    },
+    "brandsPostSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully created brand"
+            }
+          }
+        }
+      }
+    },
+    "brandsPostUserError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 400
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Required properties are missing",
+                "Please remove invalid properties",
+                "name must be a non-empty string"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "MissingPropertyError",
+                "InvalidPropertyError",
+                "InvalidStringError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "missingInBody": {
+              "type": "array",
+              "example": [
+                "name"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "invalidProperties": {
+              "type": "array",
+              "example": [
+                "ExampleInvalidProperty1",
+                "ExampleInvalidProperty2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "brandsPostInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "message": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to create brand"
+            }
+          }
+        }
+      }
+    },
+    "brandsPostConflict": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 409
+            },
+            "result": {
+              "type": "string",
+              "example": "Brand with provided name already exists"
+            },
+            "error": {
+              "type": "string",
+              "example": "DuplicateRecordError"
+            }
+          }
+        }
+      }
+    },
+    "brandsUpdateSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully updated brand"
+            }
+          }
+        }
+      }
+    },
+    "brandsUpdateUserError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 400
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Please remove invalid properties",
+                "At least one property must be present",
+                "name must be a non-empty string"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyError",
+                "BodyEmptyUserError",
+                "InvalidStringError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "validProperties": {
+              "type": "array",
+              "example": [
+                "name"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "invalidProperties": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyExample1",
+                "InvalidPropertyExample2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "brandsUpdateConflict": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 409
+            },
+            "result": {
+              "type": "string",
+              "example": "Cannot update brand - another brand with the same name already exists"
+            },
+            "error": {
+              "type": "string",
+              "example": "DuplicateRecordError"
+            }
+          }
+        }
+      }
+    },
+    "brandsUpdateInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to update brand"
+            }
+          }
+        }
+      }
+    },
+    "cartPostSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully added product to cart"
+            }
+          }
+        }
+      }
+    },
+    "cartPostNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Cannot add product to cart - Product with provided ProductId does not exist"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "string",
+              "example": "CartProductNotFoundError"
+            }
+          }
+        }
+      }
+    },
+    "cartPostInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to add product to cart"
+            }
+          }
+        }
+      }
+    },
+    "cartPostUserError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 400
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Required properties are missing",
+                "Please remove invalid properties",
+                "ProductId must be a number",
+                "Cannot add product to cart - product is no longer available"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyError",
+                "CartProductUnavailableError",
+                "InvalidNumberError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "missingInBody": {
+              "type": "array",
+              "example": [
+                "ProductId"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "invalidProperties": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyExample1",
+                "InvalidPropertyExample2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "cartCheckoutSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully purchased items"
+            },
+            "ordernumber": {
+              "type": "string",
+              "example": "abc123ef"
+            }
+          }
+        }
+      }
+    },
+    "cartCheckoutUserError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 400
+            },
+            "result": {
+              "type": "string",
+              "example": "Cannot process order - No items in cart"
+            },
+            "error": {
+              "type": "string",
+              "example": "NoItemsInCartError"
+            }
+          }
+        }
+      }
+    },
+    "cartCheckoutInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to create order"
+            }
+          }
+        }
+      }
+    },
+    "cartGetSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Successfully found cart item(s)",
+                "Cart is empty"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "cart": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "product": {
+                    "type": "string",
+                    "example": "Mac Pro Quad-Core and Dual Core GPU"
+                  },
+                  "ProductId": {
+                    "type": "number",
+                    "example": 8
+                  },
+                  "imgurl": {
+                    "type": "string",
+                    "example": "http://images.restapi.co.za/products/product-mac-pro.png"
+                  },
+                  "quantity": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "unitprice": {
+                    "type": "number",
+                    "example": 2999
+                  },
+                  "totalPrice": {
+                    "type": "number",
+                    "example": 5998
+                  },
+                  "membership": {
+                    "type": "string",
+                    "example": "Bronze"
+                  },
+                  "MembershipId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "discount": {
+                    "type": "number",
+                    "example": 0
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "example": "2024-11-06T21:40:39.000Z"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "example": "2024-11-06T21:40:50.000Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "cartGetInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to get all cart records"
+            }
+          }
+        }
+      }
+    },
+    "cartGetNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "string",
+              "example": "Cart is empty"
+            },
+            "error": {
+              "type": "string",
+              "example": "CartNotFoundError"
+            }
+          }
+        }
+      }
+    },
+    "cartDeleteSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully deleted item from cart"
+            }
+          }
+        }
+      }
+    },
+    "cartDeleteNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statuaCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "string",
+              "example": "No item with provided cart id exists"
+            },
+            "error": {
+              "type": "string",
+              "example": "CartItemNotFoundError"
+            }
+          }
+        }
+      }
+    },
+    "cartDeleteInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to delete an item from the cart"
+            }
+          }
+        }
+      }
+    },
+    "cartUpdateSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully updated item in cart"
+            }
+          }
+        }
+      }
+    },
+    "cartUpdateNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "string",
+              "example": "Cannot update cart - Cannot find cart item with provided id"
+            },
+            "error": {
+              "type": "string",
+              "example": "CartItemNotFoundError"
+            }
+          }
+        }
+      }
+    },
+    "cartUpdateUserError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 400
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "At least one property must be present in the body",
+                "Please remove invalid properties",
+                "Cannot set total quantity - totalQuantity must be 1 or higher",
+                "Cannot add to cart - add must be 1 or higher",
+                "Cannot add to cart - Specified amount to add exceeds the available product quantity",
+                "Cannot remove from cart - remove must be 1 or higher",
+                "Cannot remove any more from cart - At least 1 in quantity is required in cart. Consider deleting the cart if you want to remove all",
+                "Only one property can be used at a time - add, remove or totalQuantity",
+                "totalQuantity must be a number",
+                "add must be a number",
+                "remove must be a number"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "CartUpdateRemoveError",
+                "CartUpdateError",
+                "CartUpdateAddError",
+                "CartUpdateTotalQuantityError",
+                "InvalidNumberError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "validProperties": {
+              "type": "array",
+              "example": [
+                "totalQuantity",
+                "add",
+                "remove"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "invalidProperties": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyExample1",
+                "InvalidPropertyExample2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "cartUpdateInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to update cart item"
+            }
+          }
+        }
+      }
+    },
+    "membershipsGetSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Successfully found memberships",
+                "No memberships found"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "memberships": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Bronze"
+                  },
+                  "minrequirement": {
+                    "type": "number",
+                    "example": 0
+                  },
+                  "maxrequirement": {
+                    "type": "number",
+                    "example": 15
+                  },
+                  "discount": {
+                    "type": "number",
+                    "example": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "membershipsGetInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to get memberships"
+            }
+          }
+        }
+      }
+    },
+    "ordersGetSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Successfully found orders",
+                "No orders registered"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "orders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "ordernumber": {
+                    "type": "string",
+                    "example": "293374f8"
+                  },
+                  "UserId": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "quantity": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "status": {
+                    "type": "string",
+                    "example": "In Progress"
+                  },
+                  "MembershipId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "membership": {
+                    "type": "string",
+                    "example": "Bronze"
+                  },
+                  "discount": {
+                    "type": "number",
+                    "example": 0
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "example": "2024-11-07T13:09:25.000Z"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "example": "2024-11-07T13:09:25.000Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ordersGetUserInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "message": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to get orders for provided user id"
+            }
+          }
+        }
+      }
+    },
+    "ordersGetInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to get orders"
+            }
+          }
+        }
+      }
+    },
+    "ordersGetNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "string",
+              "example": "No orders found"
+            },
+            "error": {
+              "type": "string",
+              "example": "OrdersNotFoundError"
+            }
+          }
+        }
+      }
+    },
+    "ordersGetByOrderNumberSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully found order details"
+            },
+            "order": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "ordernumber": {
+                    "type": "string",
+                    "example": "6592238e"
+                  },
+                  "OrderId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "UserId": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "MembershipId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "membership": {
+                    "type": "string",
+                    "example": "Bronze"
+                  },
+                  "StatusId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "status": {
+                    "type": "string",
+                    "example": "In Progress"
+                  },
+                  "product": {
+                    "type": "string",
+                    "example": "Apple TV 2016"
+                  },
+                  "ProductId": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "quantity": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "unitprice": {
+                    "type": "number",
+                    "example": 599
+                  },
+                  "discount": {
+                    "type": "number",
+                    "example": 0
+                  },
+                  "totalprice": {
+                    "type": "number",
+                    "example": 599
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ordersGetByOrderNumberNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "string",
+              "example": "Cannot find any order details with provided order number"
+            },
+            "error": {
+              "type": "string",
+              "example": "OrderDetailsNotFoundError"
+            }
+          }
+        }
+      }
+    },
+    "ordersGetByOrderNumberInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "message": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to get an order by order number"
+            }
+          }
+        }
+      }
+    },
+    "ordersOrderUpdateSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully updated status of order"
+            }
+          }
+        }
+      }
+    },
+    "ordersOrderUpdateNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Cannot find order with provided order id",
+                "Cannot find status with provided status id"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "OrderNotFoundError",
+                "StatusNotFoundError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ordersOrderUpdateInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to update status of order"
+            }
+          }
+        }
+      }
+    },
+    "ordersOrderUpdateUserError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 400
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Please remove invalid properties",
+                "At least one property must be present",
+                "StatusId must be a number"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyError",
+                "BodyEmptyUserError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "validProperties": {
+              "type": "array",
+              "example": [
+                "StatusId"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "invalidProperties": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyExample1",
+                "InvalidPropertyExample2",
+                "InvalidNumberError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "categoriesGetSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully found categories"
+            },
+            "categories": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Phones"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "categoriesGetInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "message": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to get categories"
+            }
+          }
+        }
+      }
+    },
+    "categoriesPostSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully created category"
+            }
+          }
+        }
+      }
+    },
+    "categoriesPostUserError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 400
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Required properties are missing",
+                "Please remove invalid properties",
+                "name must be a non-empty string"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyError",
+                "MissingPropertyError",
+                "InvalidStringError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "missingInBody": {
+              "type": "array",
+              "example": [
+                "name"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "invalidProperties": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyExample1",
+                "InvalidPropertyExample2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "categoriesPostInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to create category"
+            }
+          }
+        }
+      }
+    },
+    "categoriesPostConflict": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 409
+            },
+            "result": {
+              "type": "string",
+              "example": "Cannot create category - A category with provided category name already exists"
+            },
+            "error": {
+              "type": "string",
+              "example": "DuplicateRecordError"
+            }
+          }
+        }
+      }
+    },
+    "categoriesDeleteSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully deleted category"
+            }
+          }
+        }
+      }
+    },
+    "categoriesDeleteNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "string",
+              "example": "Cannot delete category - Cannot find category with provided id"
+            },
+            "error": {
+              "type": "string",
+              "example": "CategoryNotFoundError"
+            }
+          }
+        }
+      }
+    },
+    "categoriesDeleteInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to delete category"
+            }
+          }
+        }
+      }
+    },
+    "categoriesDeleteConflict": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 409
+            },
+            "result": {
+              "type": "string",
+              "example": "Cannot delete category - A product is using this category"
+            },
+            "error": {
+              "type": "string",
+              "example": "CategoryDependencyError"
+            }
+          }
+        }
+      }
+    },
+    "categoriesUpdateSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully updated category"
+            }
+          }
+        }
+      }
+    },
+    "categoriesUpdateNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "string",
+              "example": "Cannot update category - Category with provided id does not exist"
+            },
+            "error": {
+              "type": "string",
+              "example": "CategoryNotFoundError"
+            }
+          }
+        }
+      }
+    },
+    "categoriesUpdateUserError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 400
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Please remove invalid properties",
+                "At least one property must be present",
+                "name must be a non-empty string"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyError",
+                "BodyEmptyUserError",
+                "InvalidStringError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "validProperties": {
+              "type": "array",
+              "example": [
+                "name"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "invalidProperties": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyExample1",
+                "InvalidPropertyExample2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "categoriesUpdateInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to update category"
+            }
+          }
+        }
+      }
+    },
+    "productsGetSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Successfully found products",
+                "No products found"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "products": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Apple TV 2016"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "The future of television is here."
+                  },
+                  "quantity": {
+                    "type": "number",
+                    "example": 21
+                  },
+                  "unitprice": {
+                    "type": "number",
+                    "example": 599
+                  },
+                  "isdeleted": {
+                    "type": "number",
+                    "example": 0
+                  },
+                  "imgurl": {
+                    "type": "string",
+                    "example": "http://images.restapi.co.za/products/product-apple-tv.png"
+                  },
+                  "date_added": {
+                    "type": "string",
+                    "example": "2020-05-30T22:00:00.000Z"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "example": "2024-12-04T10:03:40.000Z"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "example": "2024-12-04T10:03:40.000Z"
+                  },
+                  "BrandId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "CategoryId": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "brand": {
+                    "type": "string",
+                    "example": "Apple"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "TVs"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "productsGetInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to get products"
+            }
+          }
+        }
+      }
+    },
+    "productsPostSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully created product"
+            }
+          }
+        }
+      }
+    },
+    "productsPostNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "No brand with provided id exists",
+                "No category with provided id exists"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "BrandNotFoundError",
+                "CategoryNotFoundError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "productsPostInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to create a product"
+            }
+          }
+        }
+      }
+    },
+    "productsPostConflict": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 409
+            },
+            "result": {
+              "type": "string",
+              "example": "Cannot create product - A product with the same name already exists"
+            },
+            "error": {
+              "type": "string",
+              "example": "DuplicateRecordError"
+            }
+          }
+        }
+      }
+    },
+    "productsPostUserError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 400
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Required properties are missing",
+                "Please remove invalid properties",
+                "name must be a non-empty string",
+                "description must be a non-empty string",
+                "imgurl must be a string",
+                "BrandId must be a number",
+                "CategoryId must be a number",
+                "quantity must be a number",
+                "unitprice must be a number"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyError",
+                "MissingPropertyError",
+                "InvalidStringError",
+                "InvalidNumberError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "missingInBody": {
+              "type": "array",
+              "example": [
+                "name",
+                "description",
+                "quantity"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "invalidProperties": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyExample1",
+                "InvalidPropertyExample2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "productsSearchSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Successfully found products",
+                "No products found"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "products": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Apple TV 2016"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "The future of television is here."
+                  },
+                  "quantity": {
+                    "type": "number",
+                    "example": 21
+                  },
+                  "unitprice": {
+                    "type": "number",
+                    "example": 599
+                  },
+                  "isdeleted": {
+                    "type": "number",
+                    "example": 0
+                  },
+                  "imgurl": {
+                    "type": "string",
+                    "example": "http://images.restapi.co.za/products/product-apple-tv.png"
+                  },
+                  "date_added": {
+                    "type": "string",
+                    "example": "2020-05-30T22:00:00.000Z"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "example": "2024-12-04T10:03:40.000Z"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "example": "2024-12-04T10:03:40.000Z"
+                  },
+                  "BrandId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "CategoryId": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "brand": {
+                    "type": "string",
+                    "example": "Apple"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "TVs"
+                  }
+                }
+              }
+            },
+            "recordsFound": {
+              "type": "number",
+              "example": 1
+            }
+          }
+        }
+      }
+    },
+    "productsSearchUserError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 400
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "search must be a non-empty string",
+                "Required properties are missing",
+                "Please remove invalid properties"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "InvalidStringError",
+                "MissingPropertyError",
+                "InvalidPropertyError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "missingInBody": {
+              "type": "array",
+              "example": [
+                "search"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "invalidProperties": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyExample1",
+                "InvalidPropertyExample2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "productsSearchInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to search for product(s)"
+            }
+          }
+        }
+      }
+    },
+    "productsGetDeletedSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Successfully found deleted products",
+                "No deleted products found"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "products": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Apple TV 2016"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "The future of television is here."
+                  },
+                  "quantity": {
+                    "type": "number",
+                    "example": 21
+                  },
+                  "unitprice": {
+                    "type": "number",
+                    "example": 599
+                  },
+                  "isdeleted": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "imgurl": {
+                    "type": "string",
+                    "example": "http://images.restapi.co.za/products/product-apple-tv.png"
+                  },
+                  "date_added": {
+                    "type": "string",
+                    "example": "2020-05-30T22:00:00.000Z"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "example": "2024-12-04T10:03:40.000Z"
+                  },
+                  "cpdatedAt": {
+                    "type": "string",
+                    "example": "2024-12-04T10:03:40.000Z"
+                  },
+                  "BrandId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "CategoryId": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "brand": {
+                    "type": "string",
+                    "example": "Apple"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "TVs"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "productsGetDeletedInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "an internal server error has occurred while trying to get deleted products"
+            }
+          }
+        }
+      }
+    },
+    "productsGetAllSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Successfully found products",
+                "No products found"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "products": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "product": {
+                    "type": "string",
+                    "example": "Apple TV 2016"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "The future of television is here."
+                  },
+                  "quantity": {
+                    "type": "number",
+                    "example": 21
+                  },
+                  "unitprice": {
+                    "type": "number",
+                    "example": 599
+                  },
+                  "isdeleted": {
+                    "type": "number",
+                    "example": 0
+                  },
+                  "imgurl": {
+                    "type": "string",
+                    "example": "http://images.restapi.co.za/products/product-apple-tv.png"
+                  },
+                  "date_added": {
+                    "type": "string",
+                    "example": "2020-05-30T22:00:00.000Z"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "example": "2024-12-04T10:03:40.000Z"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "example": "2024-12-04T10:03:40.000Z"
+                  },
+                  "BrandId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "CategoryId": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "brand": {
+                    "type": "string",
+                    "example": "Apple"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "TVs"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "productsGetAllInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to get all products"
+            }
+          }
+        }
+      }
+    },
+    "productsUpdateSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully updated product"
+            }
+          }
+        }
+      }
+    },
+    "productsUpdateUserError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 400
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Please remove invalid properties",
+                "At least one property must be present",
+                "name must be a non-empty string",
+                "description must be a non-empty string",
+                "imgurl must be a string",
+                "BrandId must be a number",
+                "CategoryId must be a number",
+                "quantity must be a number",
+                "unitprice must be a number",
+                "Cannot set quantity to below 0",
+                "Cannot set unitprice to below 0"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyError",
+                "BodyEmptyUserError",
+                "InvalidStringError",
+                "InvalidNumberError",
+                "StockOutOfRangeError",
+                "UnitPriceOutOfRangeError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "validProperties": {
+              "type": "array",
+              "example": [
+                "name",
+                "description",
+                "imgurl",
+                "BrandId",
+                "CategoryId",
+                "quantity",
+                "unitprice"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "invalidProperties": {
+              "type": "array",
+              "example": [
+                "InvalidPropertyExample1",
+                "InvalidPropertyExample2"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "productsUpdateConflict": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 409
+            },
+            "result": {
+              "type": "string",
+              "example": "Cannot update product - A product with the provided name already exists"
+            },
+            "error": {
+              "type": "string",
+              "example": "DuplicateRecordError"
+            }
+          }
+        }
+      }
+    },
+    "productsUpdateInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to update product"
+            }
+          }
+        }
+      }
+    },
+    "productsUpdateNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Cannot update product - No product with provided id exists",
+                "Cannot update product - No brand with provided id exists",
+                "Cannot update product - No category with provided id exists"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "error": {
+              "type": "array",
+              "example": [
+                "ProductNotFoundError",
+                "BrandNotFoundError",
+                "CategoryNotFoundError"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "productsDeleteSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "string",
+              "example": "Successfully deleted product"
+            }
+          }
+        }
+      }
+    },
+    "productsDeleteNotFound": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "fail"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 404
+            },
+            "result": {
+              "type": "string",
+              "example": "Cannot delete product - no product was found with provided id"
+            },
+            "error": {
+              "type": "string",
+              "example": "ProductNotFoundError"
+            }
+          }
+        }
+      }
+    },
+    "productsDeleteInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "message": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to delete product"
+            }
+          }
+        }
+      }
+    },
+    "rolesGetSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Successfully found roles",
+                "No roles found"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "roles": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "role": {
+                    "type": "string",
+                    "example": "User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "rolesGetInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "result": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to get all roles"
+            }
+          }
+        }
+      }
+    },
+    "statusesGetSuccess": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "success"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 200
+            },
+            "result": {
+              "type": "array",
+              "example": [
+                "Successfully found statuses",
+                "No statuses found"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "statuses": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "Status": {
+                    "type": "string",
+                    "example": "In Progress"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "statusesGetInternalError": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "number",
+              "example": 500
+            },
+            "message": {
+              "type": "string",
+              "example": "An internal server error has occurred while trying to get all statuses"
+            }
+          }
+        }
+      }
+    }
+  }
+}

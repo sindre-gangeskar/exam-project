@@ -1,0 +1,37 @@
+	<div class="modal fade" id="order-update-modal">
+	  <div class="modal-dialog modal-dialog-centered">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h6 class="modal-title overflow-hidden text-truncate" id="modal-title">Edit Product</h6>
+	      </div>
+	      <form id="order-update-form">
+	        <div class="modal-body">
+	          <div class="input-container gap-5 d-flex flex-column">
+	            <div class="input-wrapper">
+	              <div class="dropdown-wrapper w-100">
+	                <div class="dropdown d-flex w-100 flex-row justify-content-between align-items-baseline">
+	                  <p>Order Status</p>
+	                  <button class="btn btn-dark w-50 dropdown-toggle dropdown-brand-btn ps-3" data-bs-toggle="dropdown" data-bs-target="update-order-status-dropdown"
+	                      id="update-order-status-btn">Set Status</button>
+	                  <ul class="dropdown-menu" id="update-order-status-dropdown">
+	                    <% statuses.forEach(status => { %>
+	                    <li>
+	                      <button class="dropdown-item" type="button" id="status-item" data-status-id="<%= status.id %>" data-status-name="<%= status.name %>">
+	                        <%= status.name%>
+	                      </button>
+	                    </li>
+	                    <% }) %>
+	                  </ul>
+	                </div>
+	              </div>
+	            </div>
+	          </div>
+	        </div>
+	        <div class="modal-footer">
+	          <button class="btn btn-primary" id="save-changes" type="submit">Save Changes</button>
+	          <button class="btn btn-dark" data-bs-dismiss="modal" type="button">Cancel</button>
+	        </div>
+	      </form>
+	    </div>
+	  </div>
+	</div>

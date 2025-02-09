@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%- title %></title>
+  <%- include('./partials/head.ejs') %>
+</head>
+
+<body class="bg-dark-subtle">
+  <%- include('./partials/navbar.ejs') %>
+  <%- include('./partials/location.ejs', {subtitle: 'Roles Management', icon: 'bi-shield-fill'}) %>
+
+
+  <div class="p-3 mt-2 container-fluid">
+    <%- include('./partials/tableHeader.ejs', {target: null}) %>
+
+    <table class="table table-bordered table-dark table-striped text-center">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(roles.length === 0){ %>
+        <td colspan="100%">No roles found</td>
+        <% } else { %>
+        <% roles.forEach(role => { %>
+        <tr class="text-center align-content-center w-100 align-baseline" data-role-id="<%= role.id %>" data-role-name="<%= role.name%>">
+          <td class="col-1"><%- role.id %></td>
+          <td class="col-1"><span class="badge <%= role.name === 'Admin' ? 'bg-primary' : 'bg-danger'%>"><%- role.name %></span></td>
+        </tr>
+        <% })%>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  <%- include('./partials/alerts/clientAlertMessages.ejs') %>
+  <%- include('./partials/bootstrapScripts.ejs') %>
+  <script src="/javascripts/alerts.js"></script>
+
+</body>
+
+</html>

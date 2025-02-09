@@ -1,0 +1,28 @@
+
+.nav-icon {
+	transition: 250ms ease;
+}
+.navigation-item a:hover {
+	color: white !important;
+}
+.navigation-item {
+	display: flex;
+	flex-direction: row;
+	transition: 250ms ease;
+}
+.navigation-item a:hover ~ .nav-icon {
+	transform: translateY(-2px);
+	color: white;
+}
+.navigation-item::after {
+	content: "";
+	position: relative;
+	display: block;
+	width: 0px;
+	height: 1px;
+	background-color: gray;
+	transition: 250ms ease;
+}
+.navigation-item:hover::after {
+	width: 100%;
+}

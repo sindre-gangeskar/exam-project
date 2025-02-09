@@ -1,0 +1,15 @@
+<div class="dropdown-wrapper w-100">
+  <div class="dropdown d-flex w-100 flex-row justify-content-between align-items-baseline">
+    <p>Brand</p>
+    <button class="btn btn-dark w-50 dropdown-toggle dropdown-brand-btn ps-3" data-bs-toggle="dropdown" data-bs-target="#<%=type%>-brand-dropdown" id="<%= type %>-brand-dropdown">Select Brand</button>
+    <ul class="dropdown-menu" id="<%=type%>-brand-dropdown">
+      <% brands.forEach(brand=> { %>
+      <li>
+        <button class="dropdown-item" type="button" id="<%=type%>-brand-item" data-brand-id="<%= brand.id %>" data-brand-value="<%= brand.name %>">
+          <%= brand.name%>
+        </button>
+      </li>
+      <% }) %>
+    </ul>
+  </div>
+</div>

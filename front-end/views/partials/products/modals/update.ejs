@@ -1,0 +1,47 @@
+	<div class="modal fade" id="updateModal">
+	  <div class="modal-dialog modal-dialog-centered">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h6 class="modal-title overflow-hidden text-truncate" id="modal-title">Edit Product</h6>
+	      </div>
+	      <form id="update-product-form">
+	        <div class="modal-body">
+	          <div class="input-container gap-5 d-flex flex-column">
+	            <div class="input-wrapper">
+	              <label for="product-name">Product Name</label>
+	              <input class="form-control bg-dark-subtle" id="product-name" name="name" placeholder="Set a new name for the product here"></input>
+	            </div>
+	            <div class="input-wrapper">
+	              <label for="product-description">Product Description</label>
+	              <input class="form-control bg-dark-subtle" id="product-description" name="description" placeholder="Set a new description for the product here"></input>
+	            </div>
+	            <div class="input-wrapper">
+	              <label for="product-image-url">Image URL</label>
+	              <input class="form-control bg-dark-subtle" id="product-image-url" type="text" name="imgurl" placeholder="Set an image url for the product here (optional)"></input>
+	            </div>
+	            <div class="input-wrapper">
+	              <label for="product-quantity">Product Quantity</label>
+	              <input class="form-control bg-dark-subtle" id="product-quantity" type="text" maxlength="9" name="quantity" placeholder="Set a new quantity for the product here"></input>
+	            </div>
+	            <div class="input-wrapper">
+	              <label for="product-price-per-unit">Product Price Per Unit</label>
+	              <input class="form-control bg-dark-subtle" id="product-price-per-unit" type="text" maxlength="9" name="unitprice" placeholder="Set a new price per unit for the product here"></input>
+	            </div>
+							
+	            <%- include('../dropdowns/brands.ejs', {type: 'update'}) %>
+	            <%- include('../dropdowns/categories.ejs', {type: 'update'}) %>
+
+	            <div class="input-wrapper form-check form-switch w-100">
+	              <label for="delete-toggle">Product deleted</label>
+	              <input class="form-check-input" id="delete-toggle" type="checkbox" name="isdeleted"></i>
+	            </div>
+	          </div>
+	        </div>
+	        <div class="modal-footer">
+	          <button class="btn btn-primary" id="save-changes" type="submit">Save Changes</button>
+	          <button class="btn btn-dark" data-bs-dismiss="modal" type="button">Cancel</button>
+	        </div>
+	      </form>
+	    </div>
+	  </div>
+	</div>

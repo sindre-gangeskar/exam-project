@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= error.message %>
+  </title>
+  <%- include('./partials/head.ejs') %>
+</head>
+
+<body class="bg-dark">
+  <div class="error-wrapper position-absolute start-50 top-50 translate-middle text-center align-content-center text-white">
+    <code>Status Code:
+      <%= error.status %>
+    </code>
+    <br>
+    <code>
+      <%= error.message %>
+    </code>
+    <hr>
+    <code>
+      <%= error.stack %>
+    </code>
+  </div>
+    <%- include('./partials/bootstrapScripts.ejs') %>
+</body>
+
+</html>

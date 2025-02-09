@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <%- include('./partials/head.ejs') %>
+</head>
+
+<body>
+  <div class="form-wrapper text-white h-100 justify-content-center w-25 bg-dark p-5 m-auto start-50 top-50 translate-middle z-1 position-absolute align-content-center min-w-50"
+      style="min-width: 500px; max-width: 800px;">
+    <form class="w-100" id="login-form" action="http://localhost:3001/" method="post">
+      <h4 class="text-center fw-light">Sindre Gangeskar - <strong>EP</strong></h4>
+      <h1 class="display-6 text-center">Admin Dashboard <i class="bi bi-arrow-right-square"></i></h1>
+      <hr>
+      <div class="input-wrapper my-2">
+        <label class="fw-bold" for="username">Username / Email</label>
+        <input type="text" class="form-control w-100" id="username" name="username" placeholder="Enter username or email..." autocomplete="email" required>
+      </div>
+      <div class="input-wrapper my-2">
+        <label class="fw-bold" for="password">Password</label>
+        <input type="password" class="form-control w-100" id="password" name="password" placeholder="Enter password..." autocomplete="current-password" required>
+      </div>
+      <hr>
+      <div class="input-wrapper my-2">
+        <input type="submit" class="btn btn-success w-100 my-2" id="submit" value="Log in">
+      </div>
+      <% if(message) { %>
+      <div class="message text-center text-danger">
+        <p><%- message %></p>
+      </div>
+      <% };%>
+    </form>
+    <form id="populate-form" class="w-100 d-flex justify-content-center m-0 p-0">
+      <button type="submit" class="btn btn-secondary" id="populate-btn">Populate Database</button>
+    </form>
+  </div>
+  <div class="bg-wrapper position-absolute top-0 left-0 w-100 h-100 overflow-hidden object-fit-cover z-0">
+    <div class="backdrop-blur w-100 h-100 bg-transparent position-absolute" style="backdrop-filter: blur(8px);"></div>
+    <img class="h-100 w-100 object-fit-cover" src="/images/login.jpg" alt="background.jpg" draggable="false">
+  </div>
+  <%- include('./partials/alerts/clientAlertMessages.ejs')  %>
+  <%- include('./partials/bootstrapScripts.ejs') %>
+  <script src="/javascripts/login.js" type="module"></script>
+</body>
+
+</html>

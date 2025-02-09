@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%- title %></title>
+  <%- include('./partials/head.ejs') %>
+</head>
+
+<body class="bg-dark-subtle">
+  <%- include('./partials/navbar.ejs') %>
+  <%- include('./partials/location.ejs', {subtitle: 'Categories Management', icon: 'bi-folder-fill'}) %>
+
+  <%- include('./partials/categories/modals/update.ejs') %>
+  <%- include('./partials/categories/modals/delete.ejs') %>
+  <%- include('./partials/categories/modals/post.ejs') %>
+
+  <div class="p-3 mt-2 container-fluid">
+   <%- include('./partials/tableHeader.ejs', {target: 'category'}) %>
+    <table class="table table-bordered table-dark table-striped text-center">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Category</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(categories.length === 0){ %>
+            <td colspan="100%">No categories found</td>
+        <%} else{ %>
+          <% categories.forEach(category => { %>
+          <tr data-category-id="<%- category.id%>" data-category-name="<%= category.name%>">
+            <td class="col-1"><%- category.id %></td>
+            <td class="col-1"><%- category.name %></td>
+            <td class="col-1">
+              <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#category-update-modal" id="edit-btn"><i class="bi bi-pencil-square"></i></button>
+              <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#category-delete-modal" id="delete-btn"><i class="bi bi-trash-fill"></i></button>
+            </td>
+          </tr>
+          <% })%>
+        <%} %>
+      </tbody>
+    </table>
+  </div>
+  <%- include('./partials/alerts/clientAlertMessages.ejs') %>
+  <%- include('./partials/bootstrapScripts.ejs') %>
+  <script src="/javascripts/categories.js" type="module"></script>
+  <script src="/javascripts/alerts.js"></script>
+</body>
+
+</html>

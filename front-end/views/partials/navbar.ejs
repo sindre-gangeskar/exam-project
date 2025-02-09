@@ -1,0 +1,47 @@
+<nav class="nav position-sticky start-0 bg-white top-0 w-100 p-0 d-block z-1">
+  <div class="navbar-header p-2 m-0 text-black d-flex justify-content-between align-items-center align-baseline" style="height: 80px;">
+    <span class="nav navbar-brand fs-3 p-2">Admin Dashboard<i class="bi bi-arrow-right-square-fill text-dark ms-2"></i>
+      <span class="ms-3 fs-6 text-secondary align-content-center"><strong>EP</strong> - Sindre Gangeskar</span>
+    </span>
+    <div class="user-options-wrapper d-flex flex-row align-items-center gap-3">
+      <div class="bg-primary text-white text-center d-flex justify-content-center align-items-center p-2 rounded-2 " id="username">
+        <p class="m-0"><%= user?.name || 'No name' %></p>
+      </div>
+      <form action="http://localhost:3001/signout" method="post">
+        <button href="/auth/signout" class=" btn btn-dark p-2 text-nowrap">Sign out</button>
+      </form>
+    </div>
+  </div>
+  <span class="navbar-content bg-dark d-flex col p-3 m-0">
+    <ul class="navigation-wrapper d-flex gap-3 my-auto list-unstyled w-100">
+      <li class="navigation-item text-white-50 align-items-center">
+        <a href="/products" class="text-white-50 text-decoration-none">Products</a>
+        <span class="nav-icon"> <i class="ms-2 bi bi-box-seam-fill"></i></span>
+      </li>
+      <li class="navigation-item text-white-50 align-items-center">
+        <a href="/brands" class="text-white-50 text-decoration-none">Brands</a>
+        <span class="nav-icon"><i class="ms-2 bi bi-tag-fill"></i></span>
+      </li>
+      <li class="navigation-item text-white-50 align-items-center">
+        <a href="/categories" class="text-white-50 text-decoration-none">Categories</a>
+        <span class="nav-icon"><i class="ms-2 bi bi-folder-fill"></i></span>
+      </li>
+      <li class="navigation-item text-white-50 align-items-center">
+        <a href="/memberships" class="text-white-50 text-decoration-none">Memberships</a>
+        <span class="nav-icon"><i class="ms-2 bi bi-person-badge-fill"></i></span>
+      </li>
+      <li class="navigation-item text-white-50 align-items-center ">
+        <a href="/roles" class="text-decoration-none text-white-50">Roles</a>
+        <span class="nav-icon"><i class="ms-2 bi bi-shield-fill"></i></span>
+      </li>
+      <li class="navigation-item text-white-50 align-items-center">
+        <a href="/users" class="text-white-50 text-decoration-none">Users</a>
+        <span class="nav-icon"><i class="ms-2 bi bi-people-fill"></i></span>
+      </li>
+      <li class="navigation-item text-white-50 align-items-center">
+        <a href="/orders" class="text-white-50 text-decoration-none">Orders</a>
+        <span class="nav-icon"><i class="ms-2 bi bi-bag-check-fill"></i></span>
+      </li>
+    </ul>
+    </div>
+</nav>

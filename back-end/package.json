@@ -1,0 +1,31 @@
+{
+  "name": "base-express",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "jest",
+    "swagger": "node ./swagger.js"
+  },
+  "dependencies": {
+    "base-express": "file:",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "http-errors": "~1.6.3",
+    "jsend": "^1.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "~1.9.1",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.11.3",
+    "sequelize": "^6.37.4",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  }
+}
