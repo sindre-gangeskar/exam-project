@@ -4,7 +4,7 @@ let timeoutId;
 export default class Client {
   async fetch(endpoint, method, body = null) {
     try {
-      const response = await fetch(`http://localhost:3001/${endpoint}`, {
+      const response = await fetch(`${endpoint}`, {
         method: method.toUpperCase().trim(),
         headers: {
           Accept: 'application/json',
