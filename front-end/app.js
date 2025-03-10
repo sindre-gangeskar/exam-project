@@ -33,6 +33,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bootstrap', express.static('./node_modules/bootstrap/dist'));
 app.use('/bootstrap-icons', express.static('./node_modules/bootstrap-icons'))
 
+console.log(process.cwd());
+
 const dbDir = path.join(__dirname, 'data');
 const dataDirExists = fs.existsSync(dbDir);
 if (!dataDirExists) {
