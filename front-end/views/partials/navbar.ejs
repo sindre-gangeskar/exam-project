@@ -7,7 +7,7 @@
       <div class="bg-primary text-white text-center d-flex justify-content-center align-items-center p-2 rounded-2 " id="username">
         <p class="m-0"><%= user?.name || 'No name' %></p>
       </div>
-      <form action="http://localhost:3001/signout" method="post">
+      <form action="/signout" method="post">
         <button href="/auth/signout" class=" btn btn-dark p-2 text-nowrap">Sign out</button>
       </form>
     </div>

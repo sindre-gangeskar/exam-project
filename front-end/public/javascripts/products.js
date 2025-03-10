@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
     e.preventDefault();
     if (searchInput.value === '') return;
     else {
-      searchForm.action = `http://localhost:3001/products/search/`;
+      searchForm.action = `/products/search/`;
       searchForm.submit();
     }
   })
