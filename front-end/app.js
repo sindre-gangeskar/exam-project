@@ -46,7 +46,7 @@ app.use(session({
   cookie: {
     maxAge: 1000 * 60 * 60 * 2,
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production' ? true : false
   },
   rolling: true
