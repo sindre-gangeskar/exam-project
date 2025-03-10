@@ -10,13 +10,13 @@
 
 <body class="bg-dark-subtle">
   <%- include('./partials/navbar.ejs') %>
-  <%- include('./partials/location.ejs', {subtitle: 'Products Management', icon: 'bi-box-fill'}) %>
   <%- include('./partials/products/search.ejs') %>
   <%- include('./partials/products/modals/delete.ejs') %>
   <%- include('./partials/products/modals/create.ejs') %>
   <%- include('./partials/products/modals/update.ejs') %>
 
   <div class="table-responsive m-auto" style="font-size: 0.8rem; max-width: 2000px;">
+    <%- include('./partials/location.ejs', {subtitle: 'Products Management', icon: 'bi-box-fill'}) %>
     <%- include('./partials/tableHeader.ejs', {target: 'product'}) %>
     <table class="table table-bordered table-dark table-striped text-center" style="table-layout: fixed;">
       <thead>

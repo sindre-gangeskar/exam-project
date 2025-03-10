@@ -34,7 +34,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bootstrap', express.static('./node_modules/bootstrap/dist'));
 app.use('/bootstrap-icons', express.static('./node_modules/bootstrap-icons'))
 
-console.log(process.cwd());
 const dbDir = path.join(__dirname, 'data');
 const dataDirExists = fs.existsSync(dbDir);
 if (!dataDirExists) {
@@ -81,7 +80,6 @@ app.use(errorHandler);
 //#region Error handling
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  /* if (res.headersSent) return next(); */
   return next(createError(404));
 });
 
@@ -93,10 +91,7 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  if (err) return res.render('error');
-  // render the error page
-  res.status(err.status || 500);
-  return res.render('error');
+  return res.status(err.status || 500).render('error', { error: { status: err.status || 500, message: err.status === 404 ? 'Resource not found' : err.message } });
 });
 
 
