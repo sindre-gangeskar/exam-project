@@ -25,7 +25,7 @@ router.post('/login', asyncHandler(async function (req, res, next) {
 
   if (user.role === 'Admin') {
     req.session.user = user;
-    res.cookie('token', token, { httpOnly: true, secure: true, sameSite: true })
+    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' ? true : false, sameSite: 'lax' })
     return res.status(response.data.statusCode).json({ status: 'success', data: { statusCode: 200, result: 'Successfully logged in!' } });
   }
   else return res.status(401).json({ status: 'fail', data: { statusCode: 401, result: 'Admin privileges required', error: 'AdminRequiredError' } })
