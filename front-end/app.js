@@ -4,6 +4,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var fs = require('fs');
 
 var session = require('express-session');
 var SQLiteStore = require('connect-sqlite3')(session);
@@ -24,7 +25,6 @@ var errorHandler = require('./middleware/errorHandler');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -33,11 +33,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bootstrap', express.static('./node_modules/bootstrap/dist'));
 app.use('/bootstrap-icons', express.static('./node_modules/bootstrap-icons'))
 
+const dataDirExists = fs.existsSync(path.join(__dirname, 'data'));
+if (!dataDirExists) {
+  fs.mkdirSync(path.join(__dirname, 'data'), { recursive: true });
+  console.log('created data directory ✅');
+}
+else console.log('data directory exists! 👍🏼');
 app.use(session({
   store: new SQLiteStore({
-    dir: './',
+    dir: path.join(__dirname, 'data'),
     db: 'sessions.db',
-    pruneSessionInterval: 1000 * 60 * 15
+    pruneSessionInterval: 1000 * 60 * 15,
   }),
 
   secret: process.env.SESSION_SECRET,
