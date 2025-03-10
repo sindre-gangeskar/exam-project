@@ -10,11 +10,11 @@
 
 <body class="bg-dark-subtle">
   <%- include('./partials/navbar.ejs') %>
+  <%- include('./partials/orders/modals/update.ejs') %>
 
   <div class="table-responsive m-auto" style="max-width: 1500px;">
     <%- include('./partials/location.ejs', {subtitle: 'Orders Management', icon: 'bi-bag-check-fill'}) %>
     <%- include('./partials/tableHeader.ejs', {target: null}) %>
-    <%- include('./partials/orders/modals/update.ejs') %>
 
     <table class="table table-bordered table-dark table-striped text-center">
       <thead>
