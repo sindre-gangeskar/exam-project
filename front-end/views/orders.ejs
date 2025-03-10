@@ -10,13 +10,13 @@
 
 <body class="bg-dark-subtle">
   <%- include('./partials/navbar.ejs') %>
-  <%- include('./partials/location.ejs', {subtitle: 'Orders Management', icon: 'bi-bag-check-fill'}) %>
 
-  <div class="p-3 mt-2 container-fluid">
+  <div class="table-responsive m-auto" style="max-width: 1500px;">
+    <%- include('./partials/location.ejs', {subtitle: 'Orders Management', icon: 'bi-bag-check-fill'}) %>
     <%- include('./partials/tableHeader.ejs', {target: null}) %>
     <%- include('./partials/orders/modals/update.ejs') %>
 
-    <table class="table table-bordered table-dark table-striped text-center">
+    <table class="table table-sm table-bordered table-dark table-striped text-center" style="font-size: 0.7rem;">
       <thead>
         <tr>
           <th class="col-1">Order ID</th>
@@ -24,8 +24,8 @@
           <th class="col-1">Ordernumber</th>
           <th class="col-1">Status</th>
           <th class="col-1">Membership</th>
-          <th class="col-1">Created At</th>
-          <th class="col-1">Updated At</th>
+          <th class="col-1 d-none d-lg-table-cell">Created At</th>
+          <th class="col-1 d-none d-lg-table-cell">Updated At</th>
           <th class="col-1">Options</th>
         </tr>
       </thead>
@@ -34,18 +34,19 @@
         <td colspan="100%">No orders found</td>
         <% } else { %>
         <% orders.forEach(order => { %>
-        <tr class="text-center align-content-center w-100 align-baseline" data-order-id="<%= order.id %>" data-order-number="<%= order.ordernumber%>" data-order-status="<%= order.status %>" data-order-status-id="<%= order.StatusId  %>"">
+        <tr class="text-center align-content-center w-100 align-baseline" data-order-id="<%= order.id %>" data-order-number="<%= order.ordernumber%>" data-order-status="<%= order.status %>"
+            data-order-status-id="<%= order.StatusId  %>"">
           <td class=" col-1"><%- order.id %></td>
           <td class=" col-1"><%- order.UserId %></td>
           <td class="col-1"><a href="orders/details/<%= order.ordernumber %>" class="link link-light"><%= order.ordernumber%></a></td>
           <td class="col-1"><span class="badge <%= order.StatusId == 1 ? 'bg-danger' : order.StatusId == 2 ? 'bg-primary' : 'bg-success' %>"><%- order.status %></span></td>
           <td class="col-1">
-            <span class="badge <%= order.membership === 'Bronze' ? 'bg-danger' : order.membership === 'Silver' ? 'bg-secondary' : 'bg-warning' %>"><%- order.membership %><span/>
+            <span class="badge <%= order.membership === 'Bronze' ? 'bg-danger' : order.membership === 'Silver' ? 'bg-secondary' : 'bg-warning' %>"><%- order.membership %><span />
           </td>
-          <td class="col-1 created-at" id="created-at"><%- order.createdAt %></td>
-          <td class="col-1 updated-at" id="updated-at"><%- order.updatedAt %></td>
+          <td class="col-1 d-none d-lg-table-cell created-at" id="created-at"><%- order.createdAt %></td>
+          <td class="col-1 d-none d-lg-table-cell updated-at" id="updated-at"><%- order.updatedAt %></td>
           <td class="col-1">
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#order-update-modal" id="edit-btn"><i class="bi bi-pencil-square"></i></button>
+            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#order-update-modal" id="edit-btn"><i class="bi bi-pencil-square"></i></button>
           </td>
         </tr>
         <% })%>

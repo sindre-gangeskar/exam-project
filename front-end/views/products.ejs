@@ -16,23 +16,22 @@
   <%- include('./partials/products/modals/create.ejs') %>
   <%- include('./partials/products/modals/update.ejs') %>
 
-  <div class="p-3 mt-2 container-fluid">
+  <div class="table-responsive m-auto" style="font-size: 0.8rem; max-width: 2000px;">
     <%- include('./partials/tableHeader.ejs', {target: 'product'}) %>
-
-    <table class="table table-bordered table-dark table-striped container-fluid text-center">
+    <table class="table table-sm table-bordered table-dark table-striped text-center" style="table-layout: fixed;">
       <thead>
         <tr>
           <th>ID</th>
           <th>Name</th>
-          <th>Description</th>
+          <th class="d-none d-lg-table-cell">Description</th>
           <th>Quantity</th>
           <th>Unit Price</th>
           <th>Is Deleted</th>
-          <th>Image</th>
-          <th>Brand</th>
-          <th>Category</th>
-          <th>Created At</th>
-          <th>Updated At</th>
+          <th class="d-none d-lg-table-cell">Image</th>
+          <th class="d-none d-lg-table-cell">Brand</th>
+          <th class="d-none d-lg-table-cell">Category</th>
+          <th class="d-none d-lg-table-cell">Created At</th>
+          <th class="d-none d-lg-table-cell ">Updated At</th>
           <th>Options</th>
         </tr>
       </thead>
@@ -57,7 +56,7 @@
 
           <td class="col-1"><%- product.id %></td>
           <td class="col-1"><%- product.name %></td>
-          <td class="col-1"><%- product.description%></td>
+          <td class="d-none d-lg-table-cell" style="text-overflow: ellipsis;"><%- product.description%></td>
           <td class="col-1"><%- product.quantity%></td>
           <td class="col-1"><%- product.unitprice%></td>
           <td class="col-1">
@@ -71,17 +70,17 @@
             </div>
             <% } %>
           </td>
-          <td class="col-1">
+          <td class="d-none d-lg-table-cell col-1">
             <img src="<%-product.imgurl%>" alt="preview-thumbnail" onerror=this.src="/images/NoImageAvailable.png" class="object-fit-contain" height="80px" width="100%">
           </td>
-          <td class="col-1"><%- product.brand%></td>
-          <td class="col-1"><%- product.category%></td>
-          <td class="col-1 created-at"><%- product.date_added || product.createdAt%></td>
-          <td class="col-1 updated-at"><%- product.updatedAt%></td>
+          <td class="d-none d-lg-table-cell col-1"><%- product.brand%></td>
+          <td class="d-none d-lg-table-cell col-1"><%- product.category%></td>
+          <td class="d-none d-lg-table-cell col-1 created-at"><%- product.date_added || product.createdAt%></td>
+          <td class="d-none d-lg-table-cell col-1 updated-at"><%- product.updatedAt%></td>
           <td class="col-2">
-            <button class="btn btn-warning" id="edit-btn" data-bs-toggle="modal" data-bs-target="#updateModal"><i class="bi bi-pencil-square"></i></button>
+            <button class="btn btn-sm btn-warning" id="edit-btn" data-bs-toggle="modal" data-bs-target="#updateModal"><i class="bi bi-pencil-square"></i></button>
             <% if(!product.isdeleted) { %>
-            <button class="btn btn-danger" id="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="bi bi-trash-fill"></i></button>
+            <button class="btn btn-sm btn-danger" id="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="bi bi-trash-fill"></i></button>
             <% } %>
           </td>
         </tr>

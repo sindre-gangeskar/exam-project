@@ -10,24 +10,24 @@
 
 <body class="bg-dark-subtle">
   <%- include('./partials/navbar.ejs') %>
-  <%- include('./partials/location.ejs', {subtitle: 'Users Management', icon: 'bi-people-fill'}) %>
   <%- include('./partials/users/modals/update.ejs') %>
-  <div class="p-3 mt-2 container-fluid">
+  <div class="table-responsive m-auto" style="max-width: 1500px; font-size: 0.7rem;">
+    <%- include('./partials/location.ejs', {subtitle: 'Users Management', icon: 'bi-people-fill'}) %>
     <%- include('./partials/tableHeader.ejs', {target: null}) %>
-    <table class="table table-bordered table-dark table-striped text-center">
+    <table class="table table-sm table-bordered table-dark table-striped text-center">
       <thead>
         <tr>
           <th>ID</th>
           <th>Username</th>
-          <th>Firstname</th>
-          <th>Lastname</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Address</th>
+          <th class="d-none d-lg-table-cell">Firstname</th>
+          <th class="d-none d-lg-table-cell">Lastname</th>
+          <th class="d-none d-lg-table-cell">Email</th>
+          <th class="d-none d-lg-table-cell">Phone</th>
+          <th class="d-none d-lg-table-cell">Address</th>
           <th>Role</th>
           <th>Membership</th>
-          <th>Created At</th>
-          <th>Updated At</th>
+          <th class="d-none d-lg-table-cell">Created At</th>
+          <th class="d-none d-lg-table-cell">Updated At</th>
           <th>Options</th>
         </tr>
       </thead>
@@ -43,17 +43,17 @@
             data-role-name="<%= user.role%>">
           <td class="col-1"><%- user.id %></td>
           <td class="col-1"><%- user.username %></td>
-          <td class="col-1"><%- user.firstname %></td>
-          <td class="col-1"><%- user.lastname %></td>
-          <td class="col-1"><%- user.email %></td>
-          <td class="col-1"><%- user.phone %></td>
-          <td class="col-1"><%- user.address %></td>
+          <td class="col-1 d-none d-lg-table-cell"><%- user.firstname %></td>
+          <td class="col-1 d-none d-lg-table-cell"><%- user.lastname %></td>
+          <td class="col-1 d-none d-lg-table-cell"><%- user.email %></td>
+          <td class="col-1 d-none d-lg-table-cell"><%- user.phone %></td>
+          <td class="col-1 d-none d-lg-table-cell"><%- user.address %></td>
           <td class="col-1"><span class="badge <%= user.role === 'Admin' ? 'bg-primary' : 'bg-danger'%>"><%- user.role %></span></td>
           <td class="col-1"><span class="badge  <%= user.membership === 'Bronze' ? 'bg-danger' : user.membership === 'Silver' ? 'bg-secondary' : 'bg-warning' %>"><%- user.membership %></span></td>
-          <td class="col-1"><%- user.createdAt%></td>
-          <td class="col-1"><%- user.updatedAt%></td>
+          <td class="col-1 d-none d-lg-table-cell"><%- user.createdAt%></td>
+          <td class="col-1 d-none d-lg-table-cell"><%- user.updatedAt%></td>
           <td class="col-1">
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#user-update-modal" id="edit-btn"><i class="bi bi-pencil-square"></i></button>
+            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#user-update-modal" id="edit-btn"><i class="bi bi-pencil-square"></i></button>
           </td>
         </tr>
         <% })%>
