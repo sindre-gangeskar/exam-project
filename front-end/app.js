@@ -33,15 +33,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bootstrap', express.static('./node_modules/bootstrap/dist'));
 app.use('/bootstrap-icons', express.static('./node_modules/bootstrap-icons'))
 
-const dataDirExists = fs.existsSync(path.join(__dirname, 'data'));
+const dbDir = path.join(__dirname, 'data');
+const dataDirExists = fs.existsSync(dbDir);
 if (!dataDirExists) {
-  fs.mkdirSync(path.join(__dirname, 'data'), { recursive: true });
+  fs.mkdirSync(dbDir, { recursive: true });
   console.log('created data directory ✅');
 }
 else console.log('data directory exists! 👍🏼');
 app.use(session({
   store: new SQLiteStore({
-    dir: path.join(__dirname, 'data'),
+    dir: dbDir,
     db: 'sessions.db',
     pruneSessionInterval: 1000 * 60 * 15,
   }),
@@ -52,7 +53,7 @@ app.use(session({
   cookie: {
     maxAge: 1000 * 60 * 60 * 2,
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: 'none',
     secure: process.env.NODE_ENV === 'production' ? true : false
   },
   rolling: true
