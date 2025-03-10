@@ -16,7 +16,7 @@
     <%- include('./partials/tableHeader.ejs', {target: null}) %>
     <%- include('./partials/orders/modals/update.ejs') %>
 
-    <table class="table table-sm table-bordered table-dark table-striped text-center" style="font-size: 0.7rem;">
+    <table class="table table-bordered table-dark table-striped text-center">
       <thead>
         <tr>
           <th class="col-1">Order ID</th>
@@ -56,6 +56,7 @@
   </div>
   <%- include('./partials/alerts/clientAlertMessages.ejs') %>
   <%- include('./partials/bootstrapScripts.ejs') %>
+
   <script src="/javascripts/orders.js" type="module"></script>
   <script src="/javascripts/alerts.js"></script>
 </body>

@@ -22,3 +22,15 @@ body {
 		transform: translateY(0);
 	}
 }
+
+	   @media (max-width: 992px) {
+	   	.table {
+	   		font-size: 0.7rem;
+	   	}
+	   }
+	
+	   @media (min-width: 992px) {
+	   	.table {
+	   		font-size: 1rem;
+	   	}
+	   }
