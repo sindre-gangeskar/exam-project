@@ -21,6 +21,7 @@ var ordersRouter = require('./routes/orders');
 var app = express();
 var errorHandler = require('./middleware/errorHandler');
 
+app.use('trust-proxy', 1);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -34,7 +35,6 @@ app.use('/bootstrap', express.static('./node_modules/bootstrap/dist'));
 app.use('/bootstrap-icons', express.static('./node_modules/bootstrap-icons'))
 
 console.log(process.cwd());
-
 const dbDir = path.join(__dirname, 'data');
 const dataDirExists = fs.existsSync(dbDir);
 if (!dataDirExists) {
