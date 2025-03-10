@@ -25,7 +25,6 @@ router.post('/login', asyncHandler(async function (req, res, next) {
 
   if (user.role === 'Admin') {
     req.session.user = user;
-    req.session.save(((err) => {err ? console.log('Error saving session', err) : 'Session successfully saved'}));
     res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' ? true : false, sameSite: 'lax' })
     return res.status(response.data.statusCode).json({ status: 'success', data: { statusCode: 200, result: 'Successfully logged in!' } });
   }

@@ -53,7 +53,7 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 2,
     httpOnly: true,
     sameSite: 'lax',
-    secure: true
+    secure: process.env.NODE_ENV === 'production' ? true : false
   },
   rolling: true
 }))
