@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
   /* Send the delete request when clicking on the confirm button in the delete modal */
   const confirmDeleteButton = document.getElementById('confirm-delete-btn');
   confirmDeleteButton.addEventListener('click', async () => {
-    const response = await client.fetch(`products/${selectedProductId}`, 'delete')
+    const response = await client.fetch(`/products/${selectedProductId}`, 'delete')
     const data = await response.json();
 
     if (response.ok) window.location.reload();

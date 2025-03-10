@@ -10,7 +10,8 @@ export default class Client {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        ...(body ? { body: JSON.stringify(body, null, 2) } : {})
+        ...(body ? { body: JSON.stringify(body, null, 2) } : {}),
+        credentials: 'include'
       })
 
       /* If the response is ok, return it to the client */
