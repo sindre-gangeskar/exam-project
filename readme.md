@@ -2,7 +2,7 @@
 
 # Noroff - Back-end Development Year 1 Exam Course Assignment (Sindre Gangeskar)
 
-This is my exam project which revolved around simulating an e-commerce application with proper handling of carts, product quantity and restrictions to stock. 
+This is my exam project which entails simulating an e-commerce application with proper handling of carts, product quantity and restrictions to stock. 
 - All users are allowed to browse and search available products (except soft-deleted products)
 - All users can search by brand, name and category
 - Authentication is done via JWTs (JSON Web Token) with Bearer in the authorization header for making API requests. 
