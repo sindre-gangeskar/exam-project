@@ -16,7 +16,7 @@ router.get('/', asyncHandler(async function (req, res, next) {
   #swagger.tags = ['Brands']
   #swagger.description = 'Any user can view all available brands'
   #swagger.responses[200] = { description: 'This response is returned when the API successfully retrieves all brands. If no brands are found, an **empty array** will be returned', schema: {$ref: '#/definitions/brandsGetSuccess'} }
-  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurrs while the API is trying to retrieve all available brands', schema: {$ref: '#/definitions/brandsGetInternalError'} }
+  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API is trying to retrieve all available brands', schema: {$ref: '#/definitions/brandsGetInternalError'} }
   */
   const brands = await brandService.getAll();
   return res.status(200).jsend.success({ statusCode: 200, result: brands.length > 0 ? 'Successfully found brands' : 'No brands found', brands: brands });
@@ -30,7 +30,7 @@ router.delete('/:id', isAuth, isAdmin, asyncHandler(async function (req, res, ne
   #swagger.responses[401] = { description: 'This response is returned when the user lacks **admin** privileges or isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/adminUnauthorized'}}
   #swagger.responses[404] = { description: 'This response is returned when the API fails to find a brand with the provided id ', schema: {$ref: '#/definitions/brandsDeleteNotFound' } }
   #swagger.responses[409] = { description: 'This response is returned when the API fails to delete the brand because a product or several are using the brand **admin** wants to delete', schema: {$ref: '#/definitions/brandsDeleteConflict'} }
-  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurrs while the API attempts to delete a brand', schema: {$ref: '#/definitions/brandsDeleteInternalError'} }
+  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API attempts to delete a brand', schema: {$ref: '#/definitions/brandsDeleteInternalError'} }
   #swagger.security = [{adminAuth: []}]
   */
   await brandService.delete(req.params.id);
@@ -46,7 +46,7 @@ router.put('/:id', isAuth, isAdmin, asyncHandler(async function (req, res, next)
   #swagger.responses[400] = { description: 'This response is returned when **admin** provides an invalid value', schema: {$ref: '#/definitions/brandsUpdateUserError'} }
   #swagger.responses[401] = { description: 'This response is returned when the user lacks **admin** privileges or isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/adminUnauthorized'}}
   #swagger.responses[409] = { description: 'This response is returned when there\'s a conflict while trying to update the brand\'s name to something another brand is already using', schema: {$ref: '#/definitions/brandsUpdateConflict'} }
-  #swagger.responses[500] = { description: 'This response is returned when an internal server occurrs while the API is trying to update brand', schema: {$ref: '#/definitions/brandsUpdateInternalError'} }
+  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API is trying to update a brand', schema: {$ref: '#/definitions/brandsUpdateInternalError'} }
   #swagger.security = [{adminAuth: []}]
   */
 
@@ -69,7 +69,7 @@ router.post('/', isAuth, isAdmin, asyncHandler(async function (req, res, next) {
   #swagger.responses[400] = { description: 'This response is returned when the **admin** user provides incorrect or invalid values or properties in the body', schema: {$ref: '#/definitions/brandsPostUserError'} }
   #swagger.responses[401] = { description: 'This response is returned when the user lacks **admin** privileges or isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/adminUnauthorized'}}
   #swagger.responses[409] = { description: 'This response is returned when the API tries to create a brand, but another brand with the provided brand name already exists', schema: {$ref: '#/definitions/brandsPostConflict'} }
-  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurrs while the API is trying to create a new brand', schema: {$ref: '#/definitions/brandsPostInternalError'} }
+  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API is trying to create a new brand', schema: {$ref: '#/definitions/brandsPostInternalError'} }
   #swagger.security = [{adminAuth: []}]
   */
   const { name } = req.body;

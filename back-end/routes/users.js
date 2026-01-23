@@ -17,7 +17,7 @@ router.get('/', isAuth, isAdmin, asyncHandler(async function (req, res, next) {
   #swagger.description = 'An **admin** can retrieve all existing users'
   #swagger.responses[200] = { description: 'This response is returned when the API successfully finds all users regsitered. If no users are found, an **empty array** will be returned', schema: {$ref: '#/definitions/usersGetSuccess'} }
   #swagger.responses[401] = { description: 'This response is returned when the user lacks **admin** privileges or isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/adminUnauthorized'}}
-  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurrs while the API is trying to get all users', schema: {$ref: '#/definitions/usersGetInternalError'} }
+  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API is trying to get all users', schema: {$ref: '#/definitions/usersGetInternalError'} }
   #swagger.security = [{adminAuth: []}]
    */
   const users = await userService.getAll();
@@ -30,7 +30,7 @@ router.get('/user/details', isAuth, asyncHandler(async function (req, res, next)
     #swagger.responses[200] = { description: 'This response is returned when the API successfully finds user details for the logged in user', schema: {$ref: '#/definitions/userGetByIdSuccess'} }
     #swagger.responses[401] = { description: 'This response is returned when the user isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/unauthorized'}}
     #swagger.responses[404] = { description: 'This response is returned when the API fails to find user details for the logged in user', schema: {$ref: '#/definitions/userGetByIdNotFound'} }
-    #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurrs while the API is trying to find user details for the logged in user', schema: {$ref: '#/definitions/userGetByIdInternalError'} }
+    #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API is trying to find user details for the logged in user', schema: {$ref: '#/definitions/userGetByIdInternalError'} }
     #swagger.security = [{userAuth: [], adminAuth: []}]
   */
   const user = await userService.getOneById(req.user.id);
@@ -44,7 +44,7 @@ router.get('/:id', isAuth, isAdmin, asyncHandler(async function (req, res, next)
   #swagger.responses[200] = { description: 'This response is returned when the API successfully finds the user with the provided id', schema: {$ref: '#/definitions/userGetByIdSuccess'} }
   #swagger.responses[401] = { description: 'This response is returned when the user lacks **admin** privileges or isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/adminUnauthorized'}}
   #swagger.responses[404] = { description: 'This response is returned when the API fails to find a user with the provided id', schema: {$ref: '#/definitions/userGetByIdNotFound'} }
-  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurrs while the API is trying to find a user with the provided id', schema: {$ref: '#/definitions/userGetByIdInternalError'} }
+  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API is trying to find a user with the provided id', schema: {$ref: '#/definitions/userGetByIdInternalError'} }
   #swagger.security = [{adminAuth: []}]
    */
   const user = await userService.getOneById(req.params.id);
@@ -61,7 +61,7 @@ router.put('/:id', isAuth, isAdmin, asyncHandler(async function (req, res, next)
   #swagger.responses[401] = { description: 'This response is returned when the user lacks **admin** privileges or isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/adminUnauthorized'}}
   #swagger.responses[404] = { description: 'This response is returned when the API fails to find a user with the provided user id, or role id', schema: {$ref: '#/definitions/userUpdateByIdNotFound'} }
   #swagger.responses[409] = { description: 'This response is returned when the user provides an **email** that is already in use by another user', schema: {$ref: '#/definitions/userUpdateByIdConflict'} }
-  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurrs while the API is trying to find a user with the provided id', schema: {$ref: '#/definitions/userUpdateByIdInternalError'} }
+  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API fails to update user data', schema: {$ref: '#/definitions/userUpdateByIdInternalError'} }
   #swagger.security = [{adminAuth: []}]
    */
   const { firstname, lastname, email, address, phone, RoleId } = req.body;

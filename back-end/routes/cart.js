@@ -19,7 +19,7 @@ router.get('/', isAuth, asyncHandler(async function (req, res, next) {
   #swagger.description = 'A **logged in user** can retrieve all items that have been added to the user\'s cart. If the cart is empty, an **empty array** will be returned' 
   #swagger.responses[200] = { description: 'This response is returned when the API successfully retrieves all items placed in cart for current user, if no cart items are found an **empty array** is returned', schema: {$ref: '#/definitions/cartGetSuccess'}}
   #swagger.responses[401] = { description: 'This response is returned when the user isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/unauthorized'}}
-  #swagger.responses[500] = { description: 'This response is returned when **an internal server** has occurred while the API is trying to get all items in cart for the current user', schema: {$ref: '#/definitions/cartGetInternalError'}}
+  #swagger.responses[500] = { description: 'This response is returned when **an internal server** has occurs while the API is trying to get all items in cart for the current user', schema: {$ref: '#/definitions/cartGetInternalError'}}
   #swagger.security = [{userAuth: []}, {adminAuth: []}]
   */
 
@@ -35,7 +35,7 @@ router.post('/', isAuth, asyncHandler(async function (req, res, next) {
   #swagger.responses[400] = { description: 'This response is returned when the **user** provides incorrect or invalid values or properties in the body', schema: {$ref: '#/definitions/cartPostUserError'}}
   #swagger.responses[401] = { description: 'This response is returned when the user isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/unauthorized'}}
   #swagger.responses[404] = { description: 'This response is returned when the API is unable to find a product with the provided id the user wishes to add to cart', schema: {$ref: '#/definitions/cartPostNotFound'}}
-  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurrs while the API is trying to add a product to cart', schema: {$ref: '#/definitions/cartPostInternalError'}}
+  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API is trying to add a product to cart', schema: {$ref: '#/definitions/cartPostInternalError'}}
   #swagger.security = [{userAuth: []}, {adminAuth: []}]
   */
   const { ProductId } = req.body;
@@ -55,7 +55,7 @@ router.post('/checkout/now', isAuth, asyncHandler(async function (req, res, next
   #swagger.responses[200] = { description: 'This response is returned when the API succeeds in checking out all cart products in the cart for the logged in user', schema: {$ref: '#/definitions/cartCheckoutSuccess'}}
   #swagger.responses[400] = { description: 'This response is returned when the API fails to find items in the cart for the logged in user', schema: {$ref: '#/definitions/cartCheckoutUserError'}}
   #swagger.responses[401] = { description: 'This response is returned when the user isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/unauthorized'}}
-  #swagger.responses[500] = { description: 'This response is returned when **an internal error** occurrs while the API is trying to check out all of the items placed in the cart for the logged in user', schema: {$ref: '#/definitions/cartCheckoutInternalError'}}
+  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API is trying to check out all of the items placed in the cart for the logged in user', schema: {$ref: '#/definitions/cartCheckoutInternalError'}}
   #swagger.security = [{adminAuth: []}, {userAuth: []}]
   */
   const ordernumber = await orderService.create(req.user.id);
@@ -69,7 +69,7 @@ router.delete('/:id', isAuth, asyncHandler(async function (req, res, next) {
   #swagger.responses[200] = { description: 'This response is returned when the API successfully deleted a cart item', schema: {$ref: '#/definitions/cartDeleteSuccess'}}
   #swagger.responses[401] = { description: 'This response is returned when the user isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/unauthorized'}}
   #swagger.responses[404] = { description: 'This response is returned when the API is unable to find a cart item with the id provided by the user', schema: {$ref: '#/definitions/cartDeleteNotFound'}}
-  #swagger.responses[500] = { description: 'This response is returned when an **an internal error** occurrs while the API is trying remove an item from cart', schema: {$ref: '#/definitions/cartDeleteInternalError'}}
+  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API is trying remove an item from cart', schema: {$ref: '#/definitions/cartDeleteInternalError'}}
   #swagger.security = [{adminAuth: []}, {userAuth: []}]
   */
   await cartService.delete(req.params.id, req.user.id);
@@ -85,7 +85,7 @@ router.put('/:id', isAuth, asyncHandler(async function (req, res, next) {
   #swagger.responses[400] = { description: 'This response is returned when the **user** has provided incorrect or invalid values or properties in the body', schema: {$ref: '#/definitions/cartUpdateUserError'}}
   #swagger.responses[401] = { description: 'This response is returned when the user isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/unauthorized'}}
   #swagger.responses[404] = { description: 'This response is returned when the API is unable to find a cart item by the id the **user** provided', schema: {$ref: '#/definitions/cartUpdateNotFound'}}
-  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurrs while the API is trying to update a cart item', schema: {$ref: '#/definitions/cartUpdateInternalError'}}
+  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API is trying to update a cart item', schema: {$ref: '#/definitions/cartUpdateInternalError'}}
   #swagger.security = [{adminAuth: []}, {userAuth: []}]
   */
   const expectedTypes = { totalQuantity: 'number', add: 'number', remove: 'number' };

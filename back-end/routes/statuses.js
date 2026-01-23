@@ -14,7 +14,7 @@ router.get('/', isAuth, isAdmin, asyncHandler(async function (req, res, next) {
   #swagger.description = 'An **admin** can retrieve all existing statuses'
   #swagger.responses[200] = { description: 'This response is returned when the API successfully finds all statuses. If no statuses are found, an **empty array** is returned', schema: {$ref: '#/definitions/statusesGetSuccess'} }
   #swagger.responses[401] = { description: 'This response is returned when the user lacks **admin** privileges or isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/adminUnauthorized'}}
-  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurrs while the API is trying to get all statuses', schema: {$ref: '#/definitions/statusesGetInternalError'} }
+  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API is trying to get all statuses', schema: {$ref: '#/definitions/statusesGetInternalError'} }
   #swagger.security = [{adminAuth: []}]
   */
   const statuses = await statusService.getAll();
