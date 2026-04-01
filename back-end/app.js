@@ -22,7 +22,7 @@ var rolesRouter = require('./routes/roles');
 var statusesRouter = require('./routes/statuses');
 
 var app = express();
-app.set('trust proxy', process.env.TRUST_PROXY || 0);
+app.set('trust proxy', +process.env.TRUST_PROXY || 0);
 const db = require('./models');
 db.sequelize.sync({ force: false });
 
