@@ -7,7 +7,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var jsend = require('jsend');
 const errorHandler = require('./middleware/errorHandler');
-
+const asyncHandler = require('./middleware/asyncHandler');
+const rateLimiter = require('./middleware/ratelimit');
 var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
 var productsRouter = require('./routes/products');
@@ -21,15 +22,17 @@ var rolesRouter = require('./routes/roles');
 var statusesRouter = require('./routes/statuses');
 
 var app = express();
-
+app.set('trust proxy', process.env.TRUST_PROXY || 0);
 const db = require('./models');
 db.sequelize.sync({ force: false });
 
 app.use(jsend.middleware);
 app.use(logger('dev'));
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(asyncHandler(rateLimiter));
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);

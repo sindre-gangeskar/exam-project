@@ -8,6 +8,8 @@
     "swagger": "node ./swagger.js"
   },
   "dependencies": {
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.37.0",
     "base-express": "file:",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -17,7 +19,7 @@
     "http-errors": "~1.6.3",
     "jsend": "^1.1.0",
     "jsonwebtoken": "^9.0.2",
-    "morgan": "~1.9.1",
+    "morgan": "^1.10.1",
     "mysql": "^2.18.1",
     "mysql2": "^3.11.3",
     "sequelize": "^6.37.4",
