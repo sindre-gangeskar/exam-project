@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
     console.log('x-forwarded-for header:', xForwardedFor);
     
     const { success, pending } = await rateLimit.limit(key, {
-      ip: req.clientIp,
+      ip: req.ip,
       userAgent: req.get('user-agent') || "unknown",
     });
     await pending;
