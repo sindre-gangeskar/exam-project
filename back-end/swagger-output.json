@@ -65,7 +65,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when **internal server error** occurrs while the API is trying to populate initial data to the database",
+            "description": "This response is returned when **internal server error** occurs while the API is trying to populate initial data to the database",
             "schema": {
               "$ref": "#/definitions/initDBInternalError"
             }
@@ -144,7 +144,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to create a user",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to create a user",
             "schema": {
               "$ref": "#/definitions/authPostSignupInternalError"
             }
@@ -207,7 +207,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** while the API is trying to find user data",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to find user data",
             "schema": {
               "$ref": "#/definitions/authPostLoginInternalError"
             }
@@ -235,7 +235,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** while the API is trying to read the token and its data",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to read the token and its data",
             "schema": {
               "$ref": "#/definitions/authGetRoleInternalError"
             }
@@ -265,7 +265,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while is trying to get all available products",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to get all available products",
             "schema": {
               "$ref": "#/definitions/productsGetInternalError"
             }
@@ -346,7 +346,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to create a product",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to create a product",
             "schema": {
               "$ref": "#/definitions/productsPostInternalError"
             }
@@ -379,7 +379,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to get products",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to get products",
             "schema": {
               "$ref": "#/definitions/productsGetAllInternalError"
             }
@@ -429,7 +429,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while is trying to get all available products with the provided keyword",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to get all available products with the provided keyword",
             "schema": {
               "$ref": "#/definitions/productsSearchInternalError"
             }
@@ -457,7 +457,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to get all **deleted** products",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to get all **deleted** products",
             "schema": {
               "$ref": "#/definitions/productsGetDeletedInternalError"
             }
@@ -550,7 +550,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to update a product",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to update a product",
             "schema": {
               "$ref": "#/definitions/productsUpdateInternalError"
             }
@@ -596,7 +596,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to delete a product",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to delete a product",
             "schema": {
               "$ref": "#/definitions/productsDeleteInternalError"
             }
@@ -629,7 +629,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when **an internal server** has occurred while the API is trying to get all items in cart for the current user",
+            "description": "This response is returned when **an internal server** has occurs while the API is trying to get all items in cart for the current user",
             "schema": {
               "$ref": "#/definitions/cartGetInternalError"
             }
@@ -692,7 +692,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to add a product to cart",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to add a product to cart",
             "schema": {
               "$ref": "#/definitions/cartPostInternalError"
             }
@@ -734,7 +734,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when **an internal error** occurrs while the API is trying to check out all of the items placed in the cart for the logged in user",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to check out all of the items placed in the cart for the logged in user",
             "schema": {
               "$ref": "#/definitions/cartCheckoutInternalError"
             }
@@ -785,7 +785,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **an internal error** occurrs while the API is trying remove an item from cart",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying remove an item from cart",
             "schema": {
               "$ref": "#/definitions/cartDeleteInternalError"
             }
@@ -863,7 +863,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to update a cart item",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to update a cart item",
             "schema": {
               "$ref": "#/definitions/cartUpdateInternalError"
             }
@@ -893,7 +893,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to retrieve all available brands",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to retrieve all available brands",
             "schema": {
               "$ref": "#/definitions/brandsGetInternalError"
             }
@@ -951,7 +951,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to create a new brand",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to create a new brand",
             "schema": {
               "$ref": "#/definitions/brandsPostInternalError"
             }
@@ -1005,7 +1005,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API attempts to delete a brand",
+            "description": "This response is returned when an **internal server error** occurs while the API attempts to delete a brand",
             "schema": {
               "$ref": "#/definitions/brandsDeleteInternalError"
             }
@@ -1075,7 +1075,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an internal server occurrs while the API is trying to update brand",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to update a brand",
             "schema": {
               "$ref": "#/definitions/brandsUpdateInternalError"
             }
@@ -1108,7 +1108,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to retrieve all memberships",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to retrieve all memberships",
             "schema": {
               "$ref": "#/definitions/membershipsGetInternalError"
             }
@@ -1135,7 +1135,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an internal server error occurrs while the API is trying to get all products",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to get all products",
             "schema": {
               "$ref": "#/definitions/categoriesGetInternalError"
             }
@@ -1190,7 +1190,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to create a new category",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to create a new category",
             "schema": {
               "$ref": "#/definitions/categoriesPostInternalError"
             }
@@ -1259,7 +1259,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** has occurred while the API is trying to update a category",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to update a category",
             "schema": {
               "$ref": "#/definitions/categoriesUpdateInternalError"
             }
@@ -1311,7 +1311,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to delete a category",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to delete a category",
             "schema": {
               "$ref": "#/definitions/categoriesDeleteInternalError"
             }
@@ -1344,7 +1344,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an internal server occurrs while the API is trying to get all orders",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to get all orders",
             "schema": {
               "$ref": "#/definitions/ordersGetInternalError"
             }
@@ -1377,7 +1377,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when An internal server has occurrs while the API is trying to get all orders for the current **User**",
+            "description": "This response is returned when an **internal server error** has occurs while the API is trying to get all orders for the current **User**",
             "schema": {
               "$ref": "#/definitions/ordersGetUserInternalError"
             }
@@ -1425,7 +1425,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an internal server occurrs while the API is trying to get order details with the provided **ordernumber**",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to get order details with the provided **ordernumber**",
             "schema": {
               "$ref": "#/definitions/ordersGetByOrderNumberInternalError"
             }
@@ -1494,7 +1494,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an internal server has occurrs while the API is trying to get all orders",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to update an order by id",
             "schema": {
               "$ref": "#/definitions/ordersOrderUpdateInternalError"
             }
@@ -1527,7 +1527,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to get all users",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to get all users",
             "schema": {
               "$ref": "#/definitions/usersGetInternalError"
             }
@@ -1566,7 +1566,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to find user details for the logged in user",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to find user details for the logged in user",
             "schema": {
               "$ref": "#/definitions/userGetByIdInternalError"
             }
@@ -1615,7 +1615,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to find a user with the provided id",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to find a user with the provided id",
             "schema": {
               "$ref": "#/definitions/userGetByIdInternalError"
             }
@@ -1708,7 +1708,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to find a user with the provided id",
+            "description": "This response is returned when an **internal server error** occurs while the API fails to update user data",
             "schema": {
               "$ref": "#/definitions/userUpdateByIdInternalError"
             }
@@ -1741,7 +1741,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when **an internal server error** occurrs while the API is trying to retrieve all roles",
+            "description": "This response is returned when **an internal server error** occurs while the API is trying to retrieve all roles",
             "schema": {
               "$ref": "#/definitions/rolesGetInternalError"
             }
@@ -1774,7 +1774,7 @@
             }
           },
           "500": {
-            "description": "This response is returned when an **internal server error** occurrs while the API is trying to get all statuses",
+            "description": "This response is returned when an **internal server error** occurs while the API is trying to get all statuses",
             "schema": {
               "$ref": "#/definitions/statusesGetInternalError"
             }

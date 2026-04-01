@@ -15,7 +15,7 @@ router.get('/all', isAuth, isAdmin, asyncHandler(async function (req, res, next)
   #swagger.description = 'An **admin** can retrieve all orders for all customers'
   #swagger.responses[200] = {description: 'This response is returned when the API successfully retrieves all orders. If no orders are found, an **empty array** will be returned', schema: {$ref: '#/definitions/ordersGetSuccess'}}
   #swagger.responses[401] = {description: 'This response is returned when the user lacks **admin** privileges or isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/adminUnauthorized'}}
-  #swagger.responses[500] = {description: 'This response is returned when an internal server occurrs while the API is trying to get all orders', schema: {$ref: '#/definitions/ordersGetInternalError'}}
+  #swagger.responses[500] = {description: 'This response is returned when an **internal server error** occurs while the API is trying to get all orders', schema: {$ref: '#/definitions/ordersGetInternalError'}}
   #swagger.security = [{adminAuth: []}]
   */
   const orders = await orderService.getAll();
@@ -27,7 +27,7 @@ router.get('/', isAuth, asyncHandler(async function (req, res, next) {
  #swagger.description = 'A logged in **user** can retrieve orders that belong to the **user**.'
  #swagger.responses[200] = {description: 'This response is returned when the API successfully retrieves all orders for the relevant **user**. If no orders are found, an **empty array** will be returned', schema: {$ref: '#/definitions/ordersGetSuccess'}}
  #swagger.responses[401] = {description: 'This response is returned when the user isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/unauthorized'}}
- #swagger.responses[500] = {description: 'This response is returned when An internal server has occurrs while the API is trying to get all orders for the current **User**', schema: {$ref: '#/definitions/ordersGetUserInternalError'}}
+ #swagger.responses[500] = {description: 'This response is returned when an **internal server error** has occurs while the API is trying to get all orders for the current **User**', schema: {$ref: '#/definitions/ordersGetUserInternalError'}}
  #swagger.security = [{userAuth: []}]
  */
   const orders = await orderService.getAllByUserId(req.user.id);
@@ -41,7 +41,7 @@ router.get('/:ordernumber', isAuth, asyncHandler(async function (req, res, next)
    #swagger.responses[200] = {description: 'This response is returned when the API successfully retrieves order details with the provided **ordernumber**', schema: {$ref: '#/definitions/ordersGetByOrderNumberSuccess'}}
    #swagger.responses[401] = { description: 'This response is returned when the user isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/unauthorized'}}
    #swagger.responses[404] = {description: 'This response is returned when the API fails to find order details with the provided **ordernumber**', schema: {$ref: '#/definitions/ordersGetByOrderNumberNotFound'}}
-   #swagger.responses[500] = {description: 'This response is returned when an internal server occurrs while the API is trying to get order details with the provided **ordernumber**', schema: {$ref: '#/definitions/ordersGetByOrderNumberInternalError'}}
+   #swagger.responses[500] = {description: 'This response is returned when an **internal server error** occurs while the API is trying to get order details with the provided **ordernumber**', schema: {$ref: '#/definitions/ordersGetByOrderNumberInternalError'}}
    #swagger.security = [{adminAuth: []}]
    */
   const details = await orderService.getOrderDetails(req.params.ordernumber, req.user);
@@ -57,7 +57,7 @@ router.put('/:id', isAuth, isAdmin, asyncHandler(async function (req, res, next)
   #swagger.responses[400] = {description: 'This response is returned when **admin** fails to include StatusId in the body or the provided value isn\'t a **number**', schema: {$ref: '#/definitions/ordersOrderUpdateUserError'}}
   #swagger.responses[401] = {description: 'This response is returned when the user lacks **admin** privileges or isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/adminUnauthorized'}}
   #swagger.responses[404] = {description: 'This response is returned when the API fails to find an order with the provided order id, or the status id', schema: {$ref: '#/definitions/ordersOrderUpdateNotFound'}}
-  #swagger.responses[500] = {description: 'This response is returned when an internal server has occurrs while the API is trying to get all orders', schema: {$ref: '#/definitions/ordersOrderUpdateInternalError'}}
+  #swagger.responses[500] = {description: 'This response is returned when an **internal server error** occurs while the API is trying to update an order by id', schema: {$ref: '#/definitions/ordersOrderUpdateInternalError'}}
   #swagger.security = [{adminAuth: []}]
   */
   const { StatusId } = req.body;

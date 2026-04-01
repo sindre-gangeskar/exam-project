@@ -19,7 +19,7 @@ router.post('/register', asyncHandler(async function (req, res, next) {
   #swagger.responses[200] = { description: 'This response is returned when the API successully creates a user', schema: {$ref: '#/definitions/authPostSignupSuccess'}}
   #swagger.responses[400] = { description: 'This response is returned when the **user** provides incorrect or invalid values in the body', schema: {$ref: '#/definitions/authPostSignupUserError'}}
   #swagger.responses[409] = { description: 'This response is returned when the user provides an **email** or a **username** that an existing user already uses', schema: {$ref: '#/definitions/authPostSignupConflict'}}
-  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurrs while the API is trying to create a user', schema: {$ref: '#/definitions/authPostSignupInternalError'}}
+  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API is trying to create a user', schema: {$ref: '#/definitions/authPostSignupInternalError'}}
   */
   const { username, firstname, lastname, email, address, phone, password } = req.body;
   const expectedProperties = [ 'username', 'firstname', 'lastname', 'email', 'address', 'phone', 'password' ];
@@ -38,7 +38,7 @@ router.post('/login', asyncHandler(async function (req, res, next) {
   #swagger.responses[200] = { description: 'This response is returned when the user successully logs in', schema: {$ref: '#/definitions/authPostLoginSuccess'}}
   #swagger.responses[400] = { description: 'This response is returned when the user has provided incorrect or invalid values or properties in the body', schema: {$ref: '#/definitions/authPostLoginUserError'}}
   #swagger.responses[404] = { description: 'This response is returned when the API fails to find user with provided **username** or **email**', schema: {$ref: '#/definitions/authPostLoginNotFound'}}
-  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** while the API is trying to find user data', schema: {$ref: '#/definitions/authPostLoginInternalError'}}
+  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API is trying to find user data', schema: {$ref: '#/definitions/authPostLoginInternalError'}}
   #swagger.parameters['body'] = { in: 'body', description: 'User credentials for logging in. The API accepts either the **username** or **email**, and allows the user to choose which to use as it doesn\'t require both to be in the body.', schema: {$username: 'johndoe', $password: 'secret', email: 'johndoe@email.com'}, required: true}
   */
 
@@ -52,7 +52,7 @@ router.get('/verify-role', isAuth, asyncHandler(async function (req, res, next) 
   #swagger.description = 'A logged in **user** can fetch the role it has - very useful when you want to make sure the user has an admin role for example.'
   #swagger.responses[200] = { description: 'This response is returned when the API successfully return the role the user is assigned', schema: {$ref: '#/definitions/authGetRoleCheckSuccess'}}
   #swagger.responses[401] = { description: 'This response is returned when the user isn\'t logged in. The response will also be returned if the **session has expired** or the **token is invalid or malformed**', schema: {$ref: '#/definitions/unauthorized'}}
-  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** while the API is trying to read the token and its data', schema: {$ref: '#/definitions/authGetRoleInternalError'}}
+  #swagger.responses[500] = { description: 'This response is returned when an **internal server error** occurs while the API is trying to read the token and its data', schema: {$ref: '#/definitions/authGetRoleInternalError'}}
   #swagger.security = [{userAuth: []}, {adminAuth: []}]
   */
   const token = await auth.getToken(req);

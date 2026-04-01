@@ -25,7 +25,7 @@ router.post('/init', asyncHandler(async function (req, res, next) {
   #swagger.description = 'Initialize the database with initial data fetched from the CA API
   #swagger.responses[200] = {description: 'This response is returned when the database is already populated', schema: {$ref: '#/definitions/initDBPopulated'}}
   #swagger.responses[201] = {description: 'This response is returned when the API successfully populates the database', schema: {$ref: '#/definitions/initDBSuccess'}}
-  #swagger.responses[500] = {description: 'This response is returned when **internal server error** occurrs while the API is trying to populate initial data to the database', schema: {$ref: '#/definitions/initDBInternalError'}}
+  #swagger.responses[500] = {description: 'This response is returned when **internal server error** occurs while the API is trying to populate initial data to the database', schema: {$ref: '#/definitions/initDBInternalError'}}
   */
 
   const isPopulated = await databaseService.isPopulated();

@@ -6,19 +6,19 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "bootstrap": "^5.3.3",
-    "bootstrap-icons": "^1.11.3",
-    "connect-sqlite3": "^0.9.15",
-    "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
-    "dotenv": "^16.4.5",
-    "ejs": "^3.1.10",
-    "express": "^4.21.1",
-    "express-session": "^1.18.1",
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
+    "connect-sqlite3": "^0.9.16",
+    "cookie-parser": "~1.4.7",
+    "debug": "~4.4.3",
+    "dotenv": "^17.2.3",
+    "ejs": "^4.0.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
     "front-end": "file:",
-    "http-errors": "~1.6.3",
+    "http-errors": "~2.0.1",
     "install": "^0.13.0",
     "jsend": "^1.1.0",
-    "morgan": "~1.9.1"
+    "morgan": "^1.10.1"
   }
 }
