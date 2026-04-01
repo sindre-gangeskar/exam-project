@@ -18,7 +18,6 @@ module.exports = async (req, res, next) => {
     if (success) next();
     else createAndThrowError(429, "Too many requests", "TooManyRequestsError");
   } catch (error) {
-    console.error(error);
     if (error.status === 429) return next(error);
     createAndThrowError(500, "An unexpected error has occurred", "InternalServerError");
   }
