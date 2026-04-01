@@ -6,9 +6,11 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var jsend = require('jsend');
+
 const errorHandler = require('./middleware/errorHandler');
 const asyncHandler = require('./middleware/asyncHandler');
 const rateLimiter = require('./middleware/ratelimit');
+
 var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
 var productsRouter = require('./routes/products');
